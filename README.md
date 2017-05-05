@@ -3,6 +3,8 @@
 
 built for Linux Mint 18 x64 / Ubuntu 16.04 x64
 
+for other debian-based distros use make_far2l_deb.sh
+
 https://github.com/elfmz/far2l
 
 https://github.com/cycleg/far-gvfs
