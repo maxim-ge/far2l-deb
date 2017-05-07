@@ -7,6 +7,7 @@ on debian jessie and older distros use make_far2l_deb.sh (btw, far-gvfs refuses 
 https://github.com/elfmz/far2l
 
 https://github.com/cycleg/far-gvfs
+
 https://github.com/cycleg/far-gvfs/issues/20
 
 http://www.farmanager.com/index.php?l=en
