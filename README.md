@@ -3,7 +3,7 @@
 
 confirmed working on Mint 18.1 / Ubuntu 16.04.2 (i386 & amd64 builds available).
 
-on debian jessie use make_far2l_deb.sh (btw, far-gvfs [refuses to build on jessie](https://github.com/cycleg/far-gvfs/issues/20)).
+on debian jessie use make_far2l_deb.sh.
 
 on older distros make_far2l_deb.sh may or may not work.
 
