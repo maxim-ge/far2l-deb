@@ -13,7 +13,7 @@
 
 .deb package for [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port, including [far-gvfs](https://github.com/cycleg/far-gvfs) plugin as FTP/SFTP/WebDAV/SMB client).
 
-Package is built for amd64 architecture for Mint 18.3 / Ubuntu 16.04.3.
+Package is built for amd64 architecture targeting Mint 18.3 / Ubuntu 16.04.3.
 
 On debian jessie and/or 32-bit distros you may try to build package yourself using make_far2l_deb.sh.
 
