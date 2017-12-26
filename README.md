@@ -1,9 +1,9 @@
 # far2l-deb
-.deb пакеты [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=en), включая FTP/SFTP/WebDAV/SMB клиент [far-gvfs](https://github.com/cycleg/far-gvfs)).
+.deb пакет [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=en), включая FTP/SFTP/WebDAV/SMB клиент [far-gvfs](https://github.com/cycleg/far-gvfs)).
 
-Пакеты собираются для Mint 18.3 / Ubuntu 16.04.3 под архитектуры i386 и amd64.
+Пакет собирается под архитектуру amd64 для Mint 18.3 / Ubuntu 16.04.3.
 
-На debian jessie вы можете собрать пакет самостоятельно, используя скрипт make_far2l_deb.sh.
+На debian jessie и/или 32-разрядных дистрибутивах вы можете собрать пакет самостоятельно, используя скрипт make_far2l_deb.sh.
 
 На более старых дистрибутивах это скрипт, возможно, тоже будет работать, хотя не факт.
 
@@ -11,11 +11,11 @@
 
 ---
 
-.deb packages for [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port, including [far-gvfs](https://github.com/cycleg/far-gvfs) plugin as FTP/SFTP/WebDAV/SMB client).
+.deb package for [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port, including [far-gvfs](https://github.com/cycleg/far-gvfs) plugin as FTP/SFTP/WebDAV/SMB client).
 
-Confirmed working on Mint 18.3 / Ubuntu 16.04.3 (i386 & amd64 builds available).
+Package is built for amd64 architecture for Mint 18.3 / Ubuntu 16.04.3.
 
-On debian jessie use make_far2l_deb.sh.
+On debian jessie and/or 32-bit distros you may try to build package yourself using make_far2l_deb.sh.
 
 On older distros make_far2l_deb.sh may or may not work.
 
