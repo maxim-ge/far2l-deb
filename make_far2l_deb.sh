@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install git gawk m4 libglib2.0-dev libwxgtk3.0-dev cmake g++ libgtkmm-3.0-dev uuid-dev libssl-dev
+sudo apt-get install git gawk m4 libglib2.0-dev libwxgtk3.0-dev cmake g++ libgtkmm-3.0-dev uuid-dev libssl-dev gvfs-libs gvfs-backends
 rm -rf far2l.deb far2l_`getconf LONG_BIT`.deb
 rm -rf far2l
 mkdir far2l
@@ -27,7 +27,7 @@ else
 fi
 echo "Maintainer: root <root@localhost>" >> deb/far2l/DEBIAN/control
 echo "Priority: extra" >> deb/far2l/DEBIAN/control
-echo "Depends: libglib2.0-dev, libwxgtk3.0-dev, libgtkmm-3.0-dev, uuid-dev, libssl-dev" >> deb/far2l/DEBIAN/control
+echo "Depends: libglib2.0-dev, libwxgtk3.0-dev, libgtkmm-3.0-dev, uuid-dev, libssl-dev, gvfs-libs, gvfs-backends" >> deb/far2l/DEBIAN/control
 echo "Description: Linux port of FAR v2" >> deb/far2l/DEBIAN/control
 echo " https://github.com/elfmz/far2l" >> deb/far2l/DEBIAN/control
 echo " ." >> deb/far2l/DEBIAN/control
