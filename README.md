@@ -11,6 +11,8 @@
 
 PS: far2l_64_tty.deb собирается с поддержкой работы в консоли. Запускать "far2l --tty". Код экспериментальный! На свой страх и риск. NB! putty не передает часть горячих клавиш, во встроенной терминалке wal commander с этим лучше. 
 
+PPS: Чтобы на безыксовом сервере заработал gvfs-плагин, запускать `dbus-launch far2l`.
+
 ---
 
 .deb package for [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port, including [far-gvfs](https://github.com/cycleg/far-gvfs) plugin as FTP/SFTP/WebDAV/SMB client).
@@ -24,3 +26,5 @@ On older distros make_far2l_deb.sh may or may not work.
 Feel free to report any issues.
 
 PS: far2l_64_tty.deb has far2l built with tty mode support. Run with "far2l --tty". Experimental! Use at your own risk. NB! putty fails to process some hotkeys, wal commander internal terminal works better.
+
+PPS: To use gvfs-plugin on X11-less server, run as `dbus-launch far2l`.
