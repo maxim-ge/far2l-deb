@@ -9,7 +9,7 @@
 
 Если у вас не завелось - пишите тикет, возможно, я смогу с этим что-нибудь сделать (или нет).
 
-PS: far2l_64_tty.deb собирается с поддержкой работы в консоли. Запускать "far2l --tty". Код экспериментальный! На свой страх и риск.
+PS: far2l_64_tty.deb собирается с поддержкой работы в консоли. Запускать "far2l --tty". Код экспериментальный! На свой страх и риск. NB! putty не передает часть горячих клавиш, во встроенной терминалке wal commander с этим лучше. 
 
 ---
 
@@ -23,4 +23,4 @@ On older distros make_far2l_deb.sh may or may not work.
 
 Feel free to report any issues.
 
-PS: far2l_64_tty.deb has far2l built with tty mode support. Run with "far2l --tty". Experimental! Use at your own risk.
+PS: far2l_64_tty.deb has far2l built with tty mode support. Run with "far2l --tty". Experimental! Use at your own risk. NB! putty fails to process some hotkeys, wal commander internal terminal works better.
