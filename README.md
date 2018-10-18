@@ -1,6 +1,6 @@
 # far2l-deb
 
-**English readme below**
+**Readme in english is below**
 
 .deb пакет [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=en), включая FTP/SFTP/WebDAV/SMB клиент [far-gvfs](https://github.com/cycleg/far-gvfs)).
 
