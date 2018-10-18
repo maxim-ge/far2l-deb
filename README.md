@@ -1,4 +1,7 @@
 # far2l-deb
+
+**English version below**
+
 .deb пакет [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=en), включая FTP/SFTP/WebDAV/SMB клиент [far-gvfs](https://github.com/cycleg/far-gvfs)).
 
 Пакет собирается под архитектуру amd64 для Mint 19 / Ubuntu 18.04.
