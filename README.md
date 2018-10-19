@@ -30,4 +30,4 @@ Feel free to report any issues.
 
 PS: far2l_64_tty.deb has far2l built with tty mode support. Run with `far2l --tty`. Experimental! Use at your own risk. NB! putty fails to process some hotkeys, wal commander internal terminal works better.
 
-PPS: To use gvfs-plugin on X11-less server, run as `dbus-launch far2l`.
+PPS: To use gvfs-plugin on X11-less server, run `dbus-launch far2l`.
