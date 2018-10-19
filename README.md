@@ -4,7 +4,7 @@
 
 .deb пакет [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=ru), включая FTP/SFTP/WebDAV/SMB клиент [far-gvfs](https://github.com/cycleg/far-gvfs)).
 
-Пакет собирается под архитектуру x84-64 для Mint 19 / Ubuntu 18.04.
+Пакет собирается под архитектуру x86-64 для Mint 19 / Ubuntu 18.04.
 
 На debian jessie и/или 32-разрядных дистрибутивах вы можете собрать пакет самостоятельно, используя скрипт make_far2l_deb.sh.
 
@@ -20,7 +20,7 @@ PPS: Чтобы на безыксовом сервере заработал gvfs
 
 .deb package for [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port, including [far-gvfs](https://github.com/cycleg/far-gvfs) plugin as FTP/SFTP/WebDAV/SMB client).
 
-Package is built for x84-64 architecture targeting Mint 19 / Ubuntu 18.04.
+Package is built for x86-64 architecture targeting Mint 19 / Ubuntu 18.04.
 
 On debian jessie and/or 32-bit distros you may try to build package yourself using make_far2l_deb.sh.
 
