@@ -10,7 +10,8 @@
 
 Чтобы на безыксовом сервере заработал gvfs-плагин, запускать `dbus-launch far2l --tty`.
 
-Известный баг: не под рутом не работает gvfs в консоли, far-gvfs#25
+Известный баг: не под рутом не работает gvfs в консоли,
+https://github.com/cycleg/far-gvfs/issues/25
 
 ---
 
@@ -23,3 +24,4 @@ As backend-separation branch is used, run with `far2l --tty` to get VERY EXPERIM
 To use gvfs-plugin on X11-less server, run `dbus-launch far2l --tty`.
 
 Known bug: gvfs mount fails then running under unprivileged user in console, far-gvfs#25
+https://github.com/cycleg/far-gvfs/issues/25
