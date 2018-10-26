@@ -2,32 +2,24 @@
 
 **Readme in english is below**
 
-.deb пакет [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=ru), включая FTP/SFTP/WebDAV/SMB клиент [far-gvfs](https://github.com/cycleg/far-gvfs)).
+.deb пакет [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=ru), включая FTP/SFTP/WebDAV/SMB клиент [far-gvfs](https://github.com/cycleg/far-gvfs)) для Ubuntu/Mint.
 
-Пакет собирается под архитектуру x86-64 для Mint 19 / Ubuntu 18.04.
+64-битная версия под актуальный LTS-выпуск обновляется чаще. Если нет пакета для нужного дистрибутива или архитектуры, вы можете попробовать собрать пакет самостоятельно, используя скрипт make_far2l_deb_tty.sh.
 
-На debian jessie и/или 32-разрядных дистрибутивах вы можете собрать пакет самостоятельно, используя скрипт make_far2l_deb.sh.
+Используется ветка backend-separation, поддерживающая работу в консоли, запускать `far2l --tty`. Поддержка консоли экспериментальная! Использование на свой страх и риск. NB! putty не передает часть горячих клавиш, во встроенной терминалке wal commander с этим лучше.
 
-На более старых дистрибутивах это скрипт, возможно, тоже будет работать, хотя и не факт.
+Чтобы на безыксовом сервере заработал gvfs-плагин, запускать `dbus-launch far2l --tty`.
 
-Если у вас не завелось - пишите тикет, возможно, я смогу с этим что-нибудь сделать (или нет).
-
-PS: far2l_64_tty.deb собирается с поддержкой работы в консоли. Запускать `far2l --tty`. Код экспериментальный! На свой страх и риск. NB! putty не передает часть горячих клавиш, во встроенной терминалке wal commander с этим лучше. 
-
-PPS: Чтобы на безыксовом сервере заработал gvfs-плагин, запускать `dbus-launch far2l`.
+Известный баг: не под рутом не работает gvfs в консоли, far-gvfs#25
 
 ---
 
-.deb package for [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port, including [far-gvfs](https://github.com/cycleg/far-gvfs) plugin as FTP/SFTP/WebDAV/SMB client).
+.deb package of [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port, including [far-gvfs](https://github.com/cycleg/far-gvfs) plugin as FTP/SFTP/WebDAV/SMB client) for Ubuntu/Mint.
 
-Package is built for x86-64 architecture targeting Mint 19 / Ubuntu 18.04.
+64-bit version for actual LTS release is updated more often. If there is no package for your OS release or architecture, you may try to build package yourself using make_far2l_deb_tty.sh.
 
-On debian jessie and/or 32-bit distros you may try to build package yourself using make_far2l_deb.sh.
+As backend-separation branch is used, run with `far2l --tty` to get VERY EXPERIMENTAL console support; use at your own risk. NB! putty fails to process some hotkeys, wal commander internal terminal works better.
 
-On older distros make_far2l_deb.sh may or may not work.
+To use gvfs-plugin on X11-less server, run `dbus-launch far2l --tty`.
 
-Feel free to report any issues.
-
-PS: far2l_64_tty.deb has far2l built with tty mode support. Run with `far2l --tty`. Experimental! Use at your own risk. NB! putty fails to process some hotkeys, wal commander internal terminal works better.
-
-PPS: To use gvfs-plugin on X11-less server, run `dbus-launch far2l`.
+Known bug: gvfs mount fails then running under unprivileged user in console, far-gvfs#25
