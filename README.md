@@ -8,7 +8,7 @@
 
 Используется ветка backend-separation, поддерживающая работу в консоли, запускать `far2l --tty`. Поддержка консоли экспериментальная! Использование на свой страх и риск. NB! putty не передает часть горячих клавиш, во встроенной терминалке wal commander с этим лучше.
 
-Чтобы на безыксовом сервере заработал gvfs-плагин, не забудьте сделать `sudo apt install gvfs-*`, запускать `sudo killall gvfsd && dbus-launch far2l`.
+Чтобы на безыксовом сервере заработал gvfs-плагин, не забудьте сделать `sudo apt install gvfs-fuse`, запускать `sudo killall gvfsd && dbus-launch far2l`.
 
 ---
 
@@ -18,5 +18,5 @@ If there is no package for your OS release or architecture, you may try to build
 
 As backend-separation branch is used, run with `far2l --tty` to get VERY EXPERIMENTAL console support; use at your own risk. NB! putty fails to process some hotkeys, wal commander internal terminal works better.
 
-To use gvfs-plugin on X11-less server, don't forget to do `sudo apt install gvfs-*`, then run `sudo killall gvfsd && dbus-launch far2l`.
+To use gvfs-plugin on X11-less server, don't forget to do `sudo apt install gvfs-fuse`, then run `sudo killall gvfsd && dbus-launch far2l`.
 
