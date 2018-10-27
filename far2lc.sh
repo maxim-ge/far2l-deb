@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Apply useful console macros
+if [[ $EUID -ne 0 ]]; then
+    mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
+else
+    mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
+fi
+
 # Search processes for the session variable 
 PID=$(pgrep -nU $USER gvfsd)
 if [[ "${PID}" == "" ]]; then
