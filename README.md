@@ -6,9 +6,9 @@
 
 Если нет пакета для нужного дистрибутива или архитектуры, вы можете попробовать собрать пакет самостоятельно, используя скрипт make_far2l_deb_tty.sh.
 
-Используется ветка backend-separation, поддерживающая работу в консоли, запускать `far2l --tty`. Поддержка консоли экспериментальная! Использование на свой страх и риск. NB! putty не передает часть горячих клавиш, во встроенной терминалке wal commander с этим лучше.
+На ветке backend-separation (tty) поддерживается экспериментальная работа в консоли, запускается по `far2lc`. Запускать в консоли просто как `far2l` или `far2l --tty` не следует, могут быть проблемы с монтированием gvfs.
 
-Чтобы на безыксовом сервере заработал gvfs-плагин, не забудьте сделать `sudo apt install gvfs-fuse`, при этом запускать far2l надо, используя `far2lc.sh`, он в этом же репозитории.
+putty не передает часть горячих клавиш, в терминале wal commander с этим лучше.
 
 ---
 
@@ -16,7 +16,6 @@
 
 If there is no package for your OS release or architecture, you may try to build package yourself using make_far2l_deb_tty.sh.
 
-As backend-separation branch is used, run with `far2l --tty` to get VERY EXPERIMENTAL console support; use at your own risk. NB! putty fails to process some hotkeys, wal commander internal terminal works better.
+As backend-separation branch is used, you can run `far2lс` to get very experimental console support; do not run `far2l` or `far2l --tty` in console directly to avoid gvfs mount problems.
 
-To use gvfs-plugin on X11-less server, don't forget to do `sudo apt install gvfs-fuse`, then use provided `far2lc.sh` to launch far2l.
-
+putty fails to process some hotkeys, wal commander terminal works better.
