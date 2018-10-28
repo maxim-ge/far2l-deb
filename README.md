@@ -8,7 +8,7 @@
 
 По умолчанию far2l работает как GUI-приложение на wxWidgets. На ветке backend-separation поддерживается экспериментальная работа в консоли, запускается по `far2lc`. Запускать в консоли просто как `far2l` или `far2l --tty` не следует, могут быть проблемы с монтированием gvfs.
 
-putty не передает часть горячих клавиш, в терминале wal commander с этим лучше.
+putty не передает часть горячих клавиш, в терминале wal commander с этим лучше. Или можно попробовать вот этот форк: https://github.com/adizero/putty-X (у кого получится собрать, поделитесь, пожалуйста, бинарниками). 
 
 ---
 
@@ -18,4 +18,5 @@ If there is no package for your OS release or architecture, you may try to build
 
 far2l defaults to run as GUI app based on wxWidgets toolkit. As backend-separation branch is used, you can run `far2lс` to get very experimental console support; do not run `far2l` or `far2l --tty` in console directly to avoid gvfs mount problems.
 
-putty fails to process some hotkeys, wal commander terminal works better.
+putty fails to process some hotkeys, wal commander terminal works better. You may also try this fork: https://github.com/adizero/putty-X (please share your binaries if you manage to build it).
+
