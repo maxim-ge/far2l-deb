@@ -11,14 +11,25 @@ if [[ $* == *--quirks* ]]; then
     fi
 fi
 
-# Apply useful console macros
-if [[ $EUID -ne 0 ]]; then
-    mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
-    mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD && printf "Sequence\nSZ\nCtrlBackSlash\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD/v-Sequence
-else
-    mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
-    mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD && printf "Sequence\nSZ\nCtrlBackSlash\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD/v-Sequence
+# Reset color quirks if required
+if [[ $* == *--unquirks* ]]; then
+    if [[ $EUID -ne 0 ]]; then
+        rm -rf ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Colors
+        rm -rf ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Plugins/k-colorer/v-HrdName
+    else
+        rm -rf /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Colors
+        rm -rf /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Plugins/k-colorer/v-HrdName
+    fi
 fi
+
+# Apply useful console macros
+#if [[ $EUID -ne 0 ]]; then
+#    mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
+#    mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD && printf "Sequence\nSZ\nCtrlBackSlash\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD/v-Sequence
+#else
+#    mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
+#    mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD && printf "Sequence\nSZ\nCtrlBackSlash\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD/v-Sequence
+#fi
 
 # Search processes for the session variable 
 PID=$(pgrep -nU $USER gvfsd)
