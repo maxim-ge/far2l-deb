@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Apply console quirks if required
-if [[ "${FARVTMARKER}" == "" ]]; then
+if [[ $* == *-f* ]]; then
     if [[ $EUID -ne 0 ]]; then
         rm -rf ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Colors
         rm -rf ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Plugins/k-colorer/v-HrdName
@@ -9,7 +9,7 @@ if [[ "${FARVTMARKER}" == "" ]]; then
         rm -rf /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Colors
         rm -rf /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Plugins/k-colorer/v-HrdName
     fi
-else
+elif [[ $* == *-8* ]]; then
     if [[ $EUID -ne 0 ]]; then
         cd ~
         unzip -o /usr/lib/far2l/quirks_far2l_vt.zip
