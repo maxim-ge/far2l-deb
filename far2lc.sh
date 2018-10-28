@@ -1,10 +1,23 @@
 #!/bin/bash
 
+# Apply console quirks if required
+if [[ $* == *--quirks* ]]; then
+    if [[ $EUID -ne 0 ]]; then
+        cd ~
+        unzip -o /usr/lib/far2l/quirks.zip
+    else
+        cd /root
+        unzip -o /usr/lib/far2l/quirks.zip
+    fi
+fi
+
 # Apply useful console macros
 if [[ $EUID -ne 0 ]]; then
     mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
+    mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD && printf "Sequence\nSZ\nCtrlBackSlash\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD/v-Sequence
 else
     mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
+    mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD && printf "Sequence\nSZ\nCtrlBackSlash\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD/v-Sequence
 fi
 
 # Search processes for the session variable 
