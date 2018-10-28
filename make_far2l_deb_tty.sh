@@ -73,7 +73,8 @@ cp far2l/far2l/DE/icons/far2l.svg deb/far2l/usr/share/icons/hicolor/scalable/app
 mkdir deb/far2l/usr/lib
 mkdir deb/far2l/usr/lib/far2l
 cp -R build/install/* deb/far2l/usr/lib/far2l/
-wget -P deb/far2l/usr/lib/far2l https://github.com/unxed/far2l-deb/raw/master/quirks.zip
+wget -P deb/far2l/usr/lib/far2l https://github.com/unxed/far2l-deb/raw/master/quirks_common.zip
+wget -P deb/far2l/usr/lib/far2l https://github.com/unxed/far2l-deb/raw/master/quirks_far2l_vt.zip
 wget -P deb/far2l/usr/lib/far2l/Plugins/colorer/base/hrd/console https://github.com/unxed/far2l-deb/raw/master/eight.hrd
 echo $'    <hrd class="console" name="eight" description="Eight">' >> deb/far2l/usr/lib/far2l/Plugins/colorer/base/hrd/catalog-console.xml
 echo $'      <location link="&hrd;/console/eight.hrd"/>' >> deb/far2l/usr/lib/far2l/Plugins/colorer/base/hrd/catalog-console.xml

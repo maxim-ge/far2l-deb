@@ -1,18 +1,7 @@
 #!/bin/bash
 
 # Apply console quirks if required
-if [[ $* == *--quirks* ]]; then
-    if [[ $EUID -ne 0 ]]; then
-        cd ~
-        unzip -o /usr/lib/far2l/quirks.zip
-    else
-        cd /root
-        unzip -o /usr/lib/far2l/quirks.zip
-    fi
-fi
-
-# Reset color quirks if required
-if [[ $* == *--unquirks* ]]; then
+if [[ "${FARVTMARKER}" == "" ]]; then
     if [[ $EUID -ne 0 ]]; then
         rm -rf ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Colors
         rm -rf ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Plugins/k-colorer/v-HrdName
@@ -20,16 +9,22 @@ if [[ $* == *--unquirks* ]]; then
         rm -rf /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Colors
         rm -rf /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-Plugins/k-colorer/v-HrdName
     fi
+else
+    if [[ $EUID -ne 0 ]]; then
+        cd ~
+        unzip -o /usr/lib/far2l/quirks_far2l_vt.zip
+    else
+        cd /root
+        unzip -o /usr/lib/far2l/quirks_far2l_vt.zip
+    fi
 fi
-
-# Apply useful console macros
-#if [[ $EUID -ne 0 ]]; then
-#    mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
-#    mkdir -p ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD && printf "Sequence\nSZ\nCtrlBackSlash\\\0" > ~/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD/v-Sequence
-#else
-#    mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS && printf "Sequence\nSZ\nAlt0 BS\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlS/v-Sequence
-#    mkdir -p /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD && printf "Sequence\nSZ\nCtrlBackSlash\\\0" > /root/.config/far2l/REG/HKU/c/k-Software/k-Far2/k-KeyMacros/k-Shell/k-CtrlD/v-Sequence
-#fi
+if [[ $EUID -ne 0 ]]; then
+    cd ~
+    unzip -o /usr/lib/far2l/quirks_common.zip
+else
+    cd /root
+    unzip -o /usr/lib/far2l/quirks_common.zip
+fi
 
 # Search processes for the session variable 
 PID=$(pgrep -nU $USER gvfsd)
