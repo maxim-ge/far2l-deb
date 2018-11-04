@@ -1,0 +1,2892 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bc4f2e0..9bfcce1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,35 +1,24 @@
+-project(gvfspanel)
++project(far2l-fuse)
+ 
+ set(HEADERS
+     src/Configuration.h
+     src/dialogs.h
+-    src/glibmmconf.h
+-    src/GvfsService.h
+-    src/GvfsServiceException.h
+-    src/GvfsServiceMonitor.h
+-    src/JobUnitQueue.h
+     src/KeyBarTitlesHelper.h
+     src/LngStringIDs.h
+     src/MountPoint.h
+     src/MountPointStorage.h
+     src/Plugin.h
+     src/RegistryStorage.h
+-    src/TextFormatter.h
+-    src/UiCallbacks.h
+ )
+ 
+ set(SOURCES
+     src/Configuration.cpp
+     src/dialogs.cpp
+-    src/GvfsService.cpp
+-    src/GvfsServiceMonitor.cpp
+     src/KeyBarTitlesHelper.cpp
+     src/MountPoint.cpp
+     src/MountPointStorage.cpp
+     src/Plugin.cpp
+     src/RegistryStorage.cpp
+-    src/TextFormatter.cpp
+-    src/UiCallbacks.cpp
+     src/PluginMain.cpp
+ )
+ 
+diff --git a/Doxyfile b/Doxyfile
+index e78d5d8..024a7bc 100644
+--- a/Doxyfile
++++ b/Doxyfile
+@@ -32,7 +32,7 @@ DOXYFILE_ENCODING      = UTF-8
+ # title of most generated pages and in a few other places.
+ # The default value is: My Project.
+ 
+-PROJECT_NAME           = far-gvfs
++PROJECT_NAME           = far2l-fuse
+ 
+ # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
+ # could be handy for archiving the generated documentation or if some version
+@@ -44,7 +44,7 @@ PROJECT_NUMBER         =
+ # for a project that appears at the top of each page and should give viewer a
+ # quick idea about the purpose of the project. Keep the description short.
+ 
+-PROJECT_BRIEF          = "Far2l plugin to work with Gnome VFS"
++PROJECT_BRIEF          = "Far2l plugin to work with FUSE"
+ 
+ # With the PROJECT_LOGO tag one can specify a logo or an icon that is included
+ # in the documentation. The maximum height of the logo should not exceed 55
+diff --git a/README.md b/README.md
+index 8703222..f827d57 100644
+--- a/README.md
++++ b/README.md
+@@ -1,198 +1,11 @@
+-# far-gvfs (gvfspanel)
++# far2l-fuse
+ 
+-Бета-версия, **использовать с осторожностью!**
+-Beta version, **use with care!**
++Альфа-версия, **использовать с осторожностью!**
++Alpha version, **use with care!**
+ 
+ _Только для особо интересующихся._
+ _Only for those who are particularly interested._
+ 
+-Очень простое дополнение к [far2l](https://github.com/elfmz/far2l). Обертка
+-вокруг GVFS: позволяет работать с сетевыми ресурсами как с виртуальными
+-файловыми системами. Поддерживаются те протоколы, которые поддерживает GVFS
+-(SFTP, WebDAV, SAMBA и др.).
++Очень простое дополнение к [far2l](https://github.com/elfmz/far2l).
++Обертка вокруг FUSE. Основана на коде [far-gvfs](https://github.com/cycleg/far-gvfs).
+ 
+-Very simple plugin for far2l. Wrap around GVFS: allows you to work with
+-network resources as virtual file systems. Supported are those protocols
+-that support GVFS (SFTP, WebDAV, SAMBA, etc.).
+-
+-#### Лицензия / License: MIT
+-
+-Использован код из/Based on code from: https://github.com/invy/far2l/tree/gvfs/gvfspanel.
+-
+-## Зависимости / Dependencies
+-
+-* gtkmm-3.0 (возможно, будет работать и с более ранней 2 версией / may work
+-  with versions prior to 2);
+-* libuuid;
+-* OpenSSL версии 1.0.2 и старше (необязательная/optional);
+-* libsecret версии 0.18.5 и старше (необязательная/optional).
+-
+-Установки зависимостей сборки в/Build dependencies in Debian (Ubuntu):
+-
+-```
+-apt-get install libgtkmm-3.0-dev uuid-dev libssl-dev libsecret-1-dev
+-```
+-
+-В зависимости от наличия libsecret и OpenSSL дополнение по-разному хранит
+-пароли. Если имеется libsecret, то пароли могут храниться в системных
+-безопасных хранилищах: Gnome Keyring или KDE Wallet. OpenSSL используется для
+-шифрования хранимых паролей, если безопасное хранилище не задействовано или
+-дополнение собрано без его поддержки. И наконец, если дополнение собирается
+-без OpenSSL и поддержки безопасного хранилища (или оно не используется), то
+-_пароли хранятся практически незашифрованными_!
+-
+-Depending on the availability of libsecret and OpenSSL, the plugin support
+-different password storages. If libsecret is available, the passwords
+-can be stored in the system's secure storage: Gnome Keyring or KDE Wallet.
+-OpenSSL is used to encrypt stored passwords if a secure repository is not
+-involved or the plugin build without its support. Finally, if the plugin
+-build without OpenSSL and support for a secure storage (or it is not used),
+-then _the passwords are stored almost unencrypted_!
+-
+-Для сборки дополнение помещается в дерево исходного кода far2l в виде
+-поддиректории. Hапример, если код far2l развернут в директорию "far2l",
+-то код far-gvfs помещается в "far2l/far-gvfs". Затем директорию добавляют
+-в проектный файл "CMakeLists.txt" far2l:
+-
+-To build, the plugin is placed in the far2l source tree as a subdirectory.
+-For example, if the far2l code is expanded into the "far2l" directory, the
+-far-gvfs code is placed in "far2l / far-gvfs". Then the directory is added
+-to the project file "CMakeLists.txt" far2l:
+-
+-```
+-...
+-add_subdirectory (align)
+-add_subdirectory (autowrap)
+-add_subdirectory (drawline)
+-add_subdirectory (far-gvfs)
+-...
+-```
+-
+-Дополнение будет собрано и подготовлено к установке вместе с прочими
+-дополнениями far2l, входящими в его состав.
+-
+-The plugin will be build and prepared for installation along with
+-other plugins far2l included in its composition.
+-
+-Для работы дополнения в целевой ОС должны быть установлены:
+-To work the plugin in the target OS should be installed:
+-
+-* gtkmm;
+-* поддержка GVFS;
+-* libuuid (пакет/package libuuid1 в/in Debian);
+-* libssl (необязательно/optional);
+-* libsecret (пакет libsecret-1, необязательно/optional).
+-
+-## Использование / Using
+-
+-Для монтирования сетевых ресурсов необходимо указать URL ресурса, учетную
+-запись и пароль для нужд аутентификации. Анонимное монтирование возможно:
+-попытки анонимного подключения выполняются, если и учетная запись, и пароль
+-_не указаны_. Вместо хранения пароля можно запрашивать его перед каждым
+-монтированием ресурса. В ходе подключения пользователю может быть сделан
+-запрос с выбором вариантов дальнейших действий. Формулировки запроса и
+-вариантов зависят от используемого протокола. Дополнение представляет их
+-в том виде, в каком получает от GVFS. Аналогично, в случае возникновения
+-каких-либо ошибок о них выдается сообщение, переданное GVFS. В случае удачного
+-завершения операции панель GVFS переключается на вновь подсоединенный ресурс.
+-Ресурсы в статусе подсоединенных в списке помечаются знаком "*". Отсоединить
+-ресурс можно, нажав Shift-F8. Статусы ресурсов на панели обновляются
+-автоматически, либо их можно обновить вручную, нажав Ctrl-R.
+-
+-To mount network resources, you must specify the resource URL, account, and
+-password needed for authentication. Anonymous mounting is possible: anonymous
+-connections are attempted if neither the account or the password are
+-specified. Instead of storing the password, you can request it each time prior
+-to mounting the resource. During the connection, the user can make a request
+-with a choice of options for further action. The wording of the request and
+-options depends on the protocol used. The plugin presents them in the form
+-they receive from GVFS. Similarly, if any errors occur, a message is sent to
+-the GVFS. If the mount operation completes successfully, the GVFS panel will
+-then switch to the newly-connected resource. Connected resources are marked
+-with an asterisk ("\*") in the list. You can disconnect from the resource by
+-pressing Shift-F8. The status of each resource in the toolbar is updated
+-automatically, or you can update them manually by pressing Ctrl-R.
+-
+-В зависимости от настроек дополнения, известные смонтированные ресурсы при
+-завершении работы с far2l можно автоматически отсоединять. Если запущено более
+-одного экземпляра far2l, то они пользуются общим (системным) пулом
+-смонтированных ресурсов. Таким образом, разрешение всех возможных конфликтов в
+-работе с ресурсами оставлено средствам самой GVFS.
+-
+-Depending on the plugin's settings, the known mounted resources can be
+-disconnected automatically when you exit far2l. If more than one instance of
+-far2l is started, then they share a common (system) pool of mounted resources.
+-Thus, the resolution of all possible conflicts in working with resources is
+-left to GVFS.
+-
+-Данные о сетевых ресурсах хранятся в реестре far2l в ветке
+-"Software/Far2/gvfspanel/Resources". В зависимости от настроек дополнения
+-пароли могут храниться отдельно в системных безопасных хранилищах. Если ранее
+-сохраненные данные перестали отображаться на панели или неправильно
+-загружаются, удалите ветку целиком и заведите ресурсы заново. Пароли в
+-системных хранилищах помечаются как "Far-gvfs password record". При удалении
+-ветки реестра рекомендуется вручную удалить и пароли в стороннем хранилище. В
+-случае, если пароль из стороннего хранилища извлечь не удалось, то запись о
+-ресурсе не отбрасывается. Пользователь сможет ввести пароль заново.
+-
+-Data about network resources is stored in the far2l registry under the
+-"Software / Far2 / gvfspanel / Resources" branch. Depending on the plugin's
+-settings, passwords can be stored separately in the system's secure storage. If
+-the previously saved data is no longer displayed in the panel or is loaded
+-incorrectly, simply delete the entire branch and re-create the resources.
+-Passwords in system storage are marked as "Far-gvfs password record". When
+-deleting a registry branch, it is recommended that you manually delete the
+-passwords in the third-party repository. In the event that the password from
+-the third-party storage could not be retrieved, the resource record is not
+-discarded. The user can enter the password again.
+-
+-Дополнение добавляется в меню выбора устройств far2l под именем "GVFS," а
+-также в меню конфигурации и команд дополнений. Параметры конфигурации far-gvfs /
+-Plugin is added to the far2l device selection menu under the name "GVFS," as
+-well as in the configuration menu and plugin commands. Far-gvfs configuration
+-parameters:
+-
+-* отсоединять или нет известные смонтированные ресурсы при выходе из far2l. По
+-  умолчанию отсоединяются. / disconnect or not known known resources when exiting
+-  far2l. By default, they are disconnected.
+-* использовать или нет для хранения паролей системные безопасные хранилища. По
+-  умолчанию не используются. Параметр может отсутствовать, если дополнение
+-  собрано без поддержки безопасных хранилищ. / use or not to store passwords for
+-  system-safe storage. By default not used. The parameter can be absent if the
+-  plugin build without the support of secure storages.
+-
+-Команды/Commands:
+-
+-* переключение текущей панели на панель самого дополнения. / Switch the current
+-  panel to the panel of the plugin itself.
+-
+-## Известные проблемы / Known issues
+-
+-Симптомы|Вероятная причина|Комментарий
+---------|-----------------|-----------
+-Ошибка 20005 при монтировании|Некоторые задержки в GVFS.|В основном безвредна, потому что ресурс фактически монтируется успешно. Подробности в [#14](https://github.com/cycleg/far-gvfs/issues/14).
+-Ошибка 2 при монтировании и переключение на локальную директорию|Указанного в URL ресурса не существует.|Домашняя директория аутентифицированного пользователя доступна, поэтому ресурс отображается как подсоединенный.
+-После подсоединения на панели отображается пустая директория.|У аутентифицированного пользователя нет прав на доступ к запрошенному ресурсу.|То же, что и в предыдущем случае.
+-Ошибка 2 при различных файловых операциях с использованием FTP в качестве транспорта.|Ошибки в реализации GVFS поверх FTP.| Это не проблема far-gvfs, потому что такие же проблемы проявляются и в других приложениях, работающих с GVFS.
+-
+-Symptoms|Possible Cause|Comment
+---------|--------------|-------
+-Error 20005 when mounting|Some delays in GVFS.|Basically harmless, because the resource is actually mounted successfully. Details at [#14](https://github.com/cycleg/far-gvfs/issues/14).
+-Error 2 when mounting and switching to local directory|The resource specified in the URL does not exist.|The home directory of the authenticated user is available, so the resource is displayed as connected.
+-After the connection, an empty directory is displayed on the panel.|An authenticated user does not have permission to access the requested resource.|The same as in the previous case.
+-Error 2 for various file operations using FTP as the transport.|Errors in the implementation of GVFS-over-FTP.|This is not a far-gvfs problem, because the same problems also occur in other applications that rely on GVFS.
+-
+-## Документация / Documentation
+-
+-Исходный код дополнения документирован с помощью doxygen. Для построения
+-документации достаточно отдать в корне дерева кода команду / The source
+-code for the plugin is documented using doxygen. For building documentation
+-it is enough to give the following command at the root of the code tree:
+-
+-```
+-doxygen Doxyfile
+-```
+-
+-Документация в формате HTML будет помещена в директорию:  docs/html/
+-
+-Documentation in HTML format will be placed in the directory:  docs/html/
+diff --git a/configs/plug/GvfsEng.lng b/configs/plug/GvfsEng.lng
+index 298d551..e5c8f62 100644
+--- a/configs/plug/GvfsEng.lng
++++ b/configs/plug/GvfsEng.lng
+@@ -5,23 +5,23 @@
+ "Error"
+ "Warning"
+ 
+-"GVFS panel"
+-" %sGVFS panel [%d] "
++"FUSE panel"
++" %sFUSE panel [%d] "
+ 
+-"GVFS"
++"FUSE"
+ 
+ "Remove"
+ "Switch"
+ "SavLst"
+ "Goto"
+ 
+-"Updating GVFS panel contents"
+-"Sending files to GVFS panel"
++"Updating FUSE panel contents"
++"Sending files to FUSE panel"
+ 
+ "Total files:"
+-"Available GVFS panels"
++"Available FUSE panels"
+ 
+-"GVFS panel"
++"FUSE panel"
+ "Unmount resources at FAR exit"
+ "Store passwords in system secret storage"
+ "Add to &Disks menu"
+diff --git a/configs/plug/GvfsRus.lng b/configs/plug/GvfsRus.lng
+index bdbc280..d8690e8 100644
+--- a/configs/plug/GvfsRus.lng
++++ b/configs/plug/GvfsRus.lng
+@@ -5,23 +5,23 @@
+ "Ошибка"
+ "Предупреждение"
+ 
+-"GVFS панель"
+-" %sGVFS панель [%d] "
++"FUSE панель"
++" %sFUSE панель [%d] "
+ 
+-"GVFS"
++"FUSE"
+ 
+ "Убрать"
+ "Выбор"
+ "СохСпи"
+ "Перехо"
+ 
+-"Обновление содержимого GVFS панели"
+-"Передача файлов в GVFS панель"
++"Обновление содержимого FUSE панели"
++"Передача файлов в FUSE панель"
+ 
+ "Всего файлов:"
+-"Доступные GVFS панели"
++"Доступные FUSE панели"
+ 
+-"GVFS панель"
++"FUSE панель"
+ "Отсоединять ресурсы при завершении FAR"
+ "Хранить пароли в системном безопасном хранилище"
+ "Добавить к меню &дисков"
+diff --git a/src/Configuration.h b/src/Configuration.h
+index a26f820..8296216 100644
+--- a/src/Configuration.h
++++ b/src/Configuration.h
+@@ -6,7 +6,7 @@
+ /// @brief Класс для работы с конфигурацией плагина.
+ 
+ /// Конфигурационные параметры сохраняются в реестре far2l в ветке плагина
+-/// "Software/Far2/gvfspanel". В текущей реализации имеются два параметра:
++/// "Software/Far2/far2l-fuse". В текущей реализации имеются два параметра:
+ /// * отключение известных подмонтированных ресурсов при выходе из far2l
+ ///   (да/нет);
+ /// * ииспользовать для хранения паролей системное безопасное хранилище
+diff --git a/src/GvfsService.cpp b/src/GvfsService.cpp
+deleted file mode 100644
+index 100d53a..0000000
+--- a/src/GvfsService.cpp
++++ /dev/null
+@@ -1,588 +0,0 @@
+-#include <atomic>
+-#include <iostream>
+-#include <functional>
+-#include <mutex>
+-#include <unordered_map>
+-#include "UiCallbacks.h"
+-#include "GvfsService.h"
+-
+-// "Объезд" ошибки в glibmm v2.50.0: проблемы с управлением памятью из-за
+-// использования Glib::StringArrayHandle в сигнале/слоте ask_question класса
+-// Gio::MountOperation. Приходится использовать оригинальный C-интерфейс GIO
+-// и глобальную переменную mountCallbacksRegistry. См. GvfsService::mount() и
+-// слот GvfsService::on_ask_question().
+-
+-#ifndef USE_GIO_MOUNTOPERATION_ONLY
+-
+-extern "C" void ask_question_wrapper(GMountOperation* op, char* message,
+-                                     char** choices, gpointer user_data);
+-extern "C" void ask_password_wrapper(GMountOperation* op, const char* message,
+-                                     const char* default_user,
+-                                     const char* default_domain,
+-                                     GAskPasswordFlags flags);
+-
+-namespace {
+-
+-///
+-/// @brief Таблица слотов для обработки сигналов процедуры монтирования ресурса.
+-
+-/// Здесь слоты -- обращения к методам класса GvfsService при обработке
+-/// сигналов от GMountOperation через C-интерфейс (не C++!). Перед запуском
+-/// монтирования экземпляр GMountOperation регистрируется в этой таблице, по
+-/// завершению -- удаляется из нее.
+-///
+-/// При манипуляциях с таблицей потокобезопасность обеспечивается стратегией
+-/// "один писатель, много читателей". Попытки зарегистрировать объект в таблице
+-/// или удалить из нее задерживаются до тех пор, пока не завершатся все
+-/// запущенные слоты. Эти операции выполняются за фиксированное время, в
+-/// отличие от слотов. Слоты могут запускаться параллельно.
+-///
+-/// @author cycleg
+-///
+-class MountCallbacks
+-{
+-    friend class ::GvfsService; ///< Только экземпляры GvfsService могут
+-                                ///< манипулировать таблицей.
+-
+-  public:
+-    MountCallbacks(): m_readers(0), m_lock(m_mapMutex, std::defer_lock)
+-    {
+-    }
+-
+-    void onAskQuestion(GMountOperation* op, char* message, char** choices,
+-                       gpointer user_data)
+-    {
+-        if (m_readers++ == 0) m_lock.lock();
+-        auto i = m_slots.find(op);
+-        if (i != m_slots.end())
+-            i->second.onAskQuestion(op, message, choices, user_data);
+-        if (--m_readers == 0) m_lock.unlock();
+-    }
+-
+-    void onAskPassword(GMountOperation* op, const char* message,
+-                       const char* default_user, const char* default_domain,
+-                       GAskPasswordFlags flags)
+-    {
+-        if (m_readers++ == 0) m_lock.lock();
+-        auto i = m_slots.find(op);
+-        if (i != m_slots.end())
+-            i->second.onAskPassword(op, message, default_user, default_domain,
+-                                    flags);
+-        if (--m_readers == 0) m_lock.unlock();
+-    }
+-
+-  private:
+-    struct slots
+-    {
+-        std::function<void(GMountOperation*, char*, char**, gpointer)>
+-            onAskQuestion; ///< слот для сигнала "ask_question"
+-        std::function<void(GMountOperation* op, const char* message,
+-                           const char* default_user,
+-                           const char* default_domain,
+-                           GAskPasswordFlags flags)>
+-            onAskPassword; ///< слот для сигнала "ask_password"
+-    };
+-
+-    void connect(GMountOperation* op, slots& cb)
+-    {
+-        // ожидаем, когда отработают все вызванные слоты
+-        std::lock_guard<std::mutex> lck(m_mapMutex);
+-        m_slots.emplace(op, cb);
+-        g_signal_connect(op, "ask_question", G_CALLBACK(ask_question_wrapper),
+-                         nullptr);
+-        g_signal_connect(op, "ask_password", G_CALLBACK(ask_password_wrapper),
+-                         nullptr);
+-    }
+-
+-    void disconnect(GMountOperation* op)
+-    {
+-        std::lock_guard<std::mutex> lck(m_mapMutex);
+-        auto i = m_slots.find(op);
+-        if (i != m_slots.end()) m_slots.erase(i);
+-    }
+-
+-    std::atomic_int m_readers; ///< Число потоков-читателей таблицы (извлекших
+-                               ///< указатели на слоты).
+-    std::mutex m_mapMutex; ///< Мутекс на запись таблицы слотов.
+-                           ///< Заперт, если есть хотя бы один читатель таблицы
+-                           ///< или имеется писатель в таблицу.
+-    std::unique_lock<std::mutex> m_lock; ///< Закрыт, если есть хотя бы один
+-                                         ///< читатель таблицы.
+-    std::unordered_map<GMountOperation*, slots>
+-        m_slots; ///< Таблица слотов: ключ -- указатель на целевой объект,
+-                 ///< который будет обрабатываться.
+-                                                                  
+-};
+-
+-MountCallbacks mountCallbacksRegistry;
+-
+-extern "C" void ask_question_wrapper(GMountOperation* op,
+-                                     char* message, char** choices,
+-                                     gpointer user_data)
+-{
+-    mountCallbacksRegistry.onAskQuestion(op, message, choices, user_data);
+-}
+-
+-
+-extern "C" void ask_password_wrapper(GMountOperation* op,
+-                                     const char* message,
+-                                     const char* default_user,
+-                                     const char* default_domain,
+-                                     GAskPasswordFlags flags)
+-{
+-    mountCallbacksRegistry.onAskPassword(op, message, default_user,
+-                                         default_domain, flags);
+-}
+-
+-} // anonymous namespace
+-
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-
+-GvfsService::GvfsService(UiCallbacks* uic) :
+-    m_uiCallbacks(uic)
+-{
+-}
+-
+-bool GvfsService::mount(const std::string &resPath, const std::string &userName,
+-                        const std::string &password)
+-{
+-    using namespace std::placeholders;
+-
+-    // какая-то операция в данном экземпляре уже запущена
+-    if (m_mainLoop && m_mainLoop->is_running()) return false;
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " GvfsService::mount() " << resPath << std::endl;
+-#endif //NDEBUG
+-    m_exception.reset();
+-    m_mountScheme.clear();
+-    m_mountPath.clear();
+-    m_mountName.clear();
+-
+-    Glib::RefPtr<Glib::MainContext> main_context = Glib::MainContext::create();
+-    // Чтобы контекст главного цикла Glib::MainLoop не отслеживал ничего,
+-    // кроме операций с ресурсами! Иначе блокируется пользовательский ввод Far.
+-    // Из руководства:
+-    // This will cause certain asynchronous operations (such as most GIO-based
+-    // I/O) which are started in this thread to run under context and deliver
+-    // their results to its main loop, rather than running under the global
+-    // default context in the main thread.
+-    g_main_context_push_thread_default(main_context->gobj());
+-    m_mainLoop = Glib::MainLoop::create(main_context, false);
+-
+-    m_file = Gio::File::create_for_parse_name(resPath);
+-    Glib::RefPtr<Gio::MountOperation> mount_operation = Gio::MountOperation::create();
+-
+-    if (!userName.empty()) mount_operation->set_username(userName);
+-    if (!password.empty()) mount_operation->set_password(password);
+-
+-    // connect mount_operation slots
+-#ifdef USE_GIO_MOUNTOPERATION_ONLY
+-    mount_operation->signal_ask_question().connect(
+-        std::bind(&GvfsService::on_ask_question, this, mount_operation, _1, _2)
+-    );
+-    mount_operation->signal_ask_password().connect(
+-        std::bind(&GvfsService::on_ask_password, this, mount_operation, _1, _2,
+-                  _3, _4)
+-    );
+-#else // USE_GIO_MOUNTOPERATION_ONLY
+-    MountCallbacks::slots sl;
+-    sl.onAskQuestion = std::bind(&GvfsService::on_ask_question, this, _1, _2,
+-                                 _3, _4);
+-    sl.onAskPassword = std::bind(&GvfsService::on_ask_password, this, _1, _2,
+-                                 _3, _4, _5);
+-    mountCallbacksRegistry.connect(mount_operation->gobj(), sl);
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-    mount_operation->signal_aborted().connect(
+-        std::bind(&GvfsService::on_aborted, this, mount_operation)
+-    );
+-
+-    // do mount
+-    bool l_mounted = false;
+-    try
+-    {
+-        m_file->mount_enclosing_volume(mount_operation,
+-                                       [this] (Glib::RefPtr<Gio::AsyncResult>& result)
+-                                       {
+-                                          this->mount_cb(result);
+-                                       });
+-        m_mainLoop->run();
+-#ifndef USE_GIO_MOUNTOPERATION_ONLY
+-        mountCallbacksRegistry.disconnect(mount_operation->gobj());
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-        // Если адрес уже подключен (пользователь завел два ресурса про один
+-        // и тот же сервер), то m_file->find_enclosing_mount() завершится без
+-        // исключения, и ошибка "already mount" будет проигнорирована, что
+-        // правильно. В случае других ошибок монтирования здесь возникнет
+-        // исключение.
+-        m_mountName = m_file->find_enclosing_mount()->get_name();
+-        m_mountPath = m_file->get_path();
+-        m_mountScheme = m_file->get_uri_scheme();
+-        std::cout << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::mount() name: " << m_mountName << std::endl
+-                  << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::mount() path: " << m_mountPath << std::endl
+-                  << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::mount() scheme: " << m_mountScheme << std::endl;
+-        l_mounted = true;
+-        // Из руководства:
+-        // In some cases however, you may want to schedule a single operation
+-        // in a non-default context, or temporarily use a non-default context
+-        // in the main thread. In that case, you can wrap the call to the
+-        // asynchronous operation inside a
+-        // g_main_context_push_thread_default() / g_main_context_pop_thread_default()
+-        // pair...
+-        // Второй вариант, видимо, наш случай. Без этого вызова Glib выдает
+-        // assert.
+-        g_main_context_pop_thread_default(main_context->gobj());
+-    }
+-    catch (const Glib::Error& ex)
+-    {
+-        std::cerr << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::mount() Glib::Error: " << ex.what().raw()
+-                  << std::endl;
+-#ifndef USE_GIO_MOUNTOPERATION_ONLY
+-        mountCallbacksRegistry.disconnect(mount_operation->gobj());
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-        g_main_context_pop_thread_default(main_context->gobj());
+-        if (m_exception.get() == nullptr)
+-        {
+-          m_exception = std::make_shared<GvfsServiceException>(ex.domain(),
+-                                         ex.code(), ex.what());
+-        }
+-        throw *m_exception;
+-    }
+-    return l_mounted;
+-}
+-
+-bool GvfsService::umount(const std::string &resPath)
+-{
+-    // какая-то операция в данном экземпляре уже запущена
+-    if (m_mainLoop && m_mainLoop->is_running()) return false;
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " GvfsService::umount() " << resPath << std::endl;
+-#endif // NDEBUG
+-    m_exception.reset();
+-
+-    m_mainLoop = Glib::MainLoop::create(false);
+-
+-    m_file = Gio::File::create_for_parse_name(resPath);
+-    Glib::RefPtr<Gio::MountOperation> mount_operation = Gio::MountOperation::create();
+-
+-    bool l_unmounted = false;
+-    try
+-    {
+-        Glib::RefPtr<Gio::Mount> mount = m_file->find_enclosing_mount();
+-        mount->unmount(mount_operation,
+-                       [&l_unmounted, this] (Glib::RefPtr<Gio::AsyncResult>& result)
+-                       {
+-                           l_unmounted = this->unmount_cb(result);
+-                       });
+-        m_mainLoop->run();
+-    }
+-    catch (const Glib::Error& ex)
+-    {
+-        std::cerr << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::umount() Glib::Error: "<< ex.what().raw()
+-                  << std::endl;
+-        if (m_exception.get() == nullptr)
+-        {
+-          m_exception = std::make_shared<GvfsServiceException>(ex.domain(),
+-                                         ex.code(), ex.what());
+-        }
+-        m_mountScheme.clear();
+-        m_mountPath.clear();
+-        m_mountName.clear();
+-        throw *m_exception;
+-    }
+-    if (l_unmounted)
+-        {
+-            m_mountScheme.clear();
+-            m_mountPath.clear();
+-            m_mountName.clear();
+-        }
+-        else
+-        {
+-            if (m_exception.get() != nullptr)
+-            {
+-                m_mountScheme.clear();
+-                m_mountPath.clear();
+-                m_mountName.clear();
+-                throw *m_exception;
+-            }
+-        }
+-    return l_unmounted;
+-}
+-
+-bool GvfsService::mounted(const std::string& resPath)
+-{
+-    // какая-то операция в данном экземпляре уже запущена
+-    if (m_mainLoop && m_mainLoop->is_running()) return false;
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " GvfsService::mounted() " << resPath << std::endl;
+-#endif // NDEBUG
+-    m_exception.reset();
+-    m_mountScheme.clear();
+-    m_mountPath.clear();
+-    m_mountName.clear();
+-
+-    m_mainLoop = Glib::MainLoop::create(false);
+-
+-    m_file = Gio::File::create_for_parse_name(resPath);
+-    Glib::RefPtr<Gio::Mount> l_mount;
+-    try
+-    {
+-        m_file->find_enclosing_mount_async([&l_mount, this] (Glib::RefPtr<Gio::AsyncResult>& result)
+-                                           {
+-                                               l_mount = this->find_mount_cb(result);
+-                                           });
+-        m_mainLoop->run();
+-        if (l_mount.operator->() != nullptr)
+-        {
+-            m_mountName = l_mount->get_name();
+-            m_mountPath = m_file->get_path();
+-            m_mountScheme = m_file->get_uri_scheme();
+-            std::cout << std::hex << std::this_thread::get_id() << std::dec
+-                      << " GvfsService::mounted() name: " << m_mountName << std::endl
+-                      << std::hex << std::this_thread::get_id() << std::dec
+-                      << " GvfsService::mounted() path: " << m_mountPath << std::endl
+-                      << std::hex << std::this_thread::get_id() << std::dec
+-                      << " GvfsService::mounted() scheme: " << m_mountScheme << std::endl;
+-        }
+-    }
+-    catch (const Glib::Error& ex)
+-    {
+-        std::cerr << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::mounted() Glib::Error: "<< ex.what().raw()
+-                  << std::endl;
+-        l_mount.reset();
+-    }
+-    // don't escalate error here
+-    m_exception.reset();
+-    return (l_mount.operator->() != nullptr);
+-}
+-
+-#ifdef USE_GIO_MOUNTOPERATION_ONLY
+-
+-void GvfsService::on_ask_question(Glib::RefPtr<Gio::MountOperation>& mount_operation,
+-                                  const Glib::ustring& msg,
+-                                  const std::vector<Glib::ustring>& choices)
+-{
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " on signal_ask_question: " << msg.raw() << std::endl
+-              << std::hex << std::this_thread::get_id() << std::dec
+-              << " choices:" << std::endl;
+-    int i = 0;
+-    for (const auto& choice : choices)
+-        std::cout << i++ << " " << choice.raw() << std::endl;
+-#endif // NDEBUG
+-    if (m_uiCallbacks)
+-        {
+-            int answer = mount_operation->get_choice();
+-            m_uiCallbacks->onAskQuestion(msg, choices, answer);
+-            if (answer != -1)
+-                {
+-                    mount_operation->set_choice(answer);
+-                    mount_operation->reply(Gio::MOUNT_OPERATION_HANDLED);
+-                }
+-                else mount_operation->reply(Gio::MOUNT_OPERATION_ABORTED);
+-        }
+-        else mount_operation->reply(Gio::MOUNT_OPERATION_HANDLED);
+-}
+-
+-void GvfsService::on_ask_password(Glib::RefPtr<Gio::MountOperation>& mount_operation,
+-                                  const Glib::ustring& msg,
+-                                  const Glib::ustring& defaultUser,
+-                                  const Glib::ustring& defaultdomain,
+-                                  Gio::AskPasswordFlags flags)
+-{
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " Gvfs on signal_ask_password ask password: "
+-              << msg.raw() << std::endl
+-              << std::hex << std::this_thread::get_id() << std::dec
+-              << " Gvfs on signal_ask_password default user: "
+-              << defaultUser.raw() << std::endl
+-              << std::hex << std::this_thread::get_id() << std::dec
+-              << " Gvfs on signal_ask_password default domain: "
+-              << defaultdomain.raw() << std::endl;
+-#endif // NDEBUG
+-
+-    if ((flags & G_ASK_PASSWORD_ANONYMOUS_SUPPORTED) &&
+-        mount_operation->get_username().empty() &&
+-        mount_operation->get_password().empty())
+-    {
+-#ifndef NDEBUG
+-        std::cout << std::hex << std::this_thread::get_id() << std::dec
+-                  << " Gvfs on signal_ask_password set anonymous" << std::endl;
+-#endif // NDEBUG
+-        mount_operation->set_anonymous(true);
+-    }
+-    else
+-    {
+-        // trigger functor for entering user credentials
+-        if (flags & G_ASK_PASSWORD_NEED_USERNAME)
+-        {
+-#ifndef NDEBUG
+-            std::cout << std::hex << std::this_thread::get_id() << std::dec
+-                      << " Gvfs on signal_ask_password NEED USERNAME" << std::endl;
+-#endif // NDEBUG
+-            // trigger user name enter callback, call passwd functor
+-        }
+-        if (flags & G_ASK_PASSWORD_NEED_DOMAIN)
+-        {
+-#ifndef NDEBUG
+-            std::cout << std::hex << std::this_thread::get_id() << std::dec
+-                      << " Gvfs on signal_ask_password NEED DOMAIN" << std::endl;
+-#endif // NDEBUG
+-            // trigger domain name enter callback, call passwd functor
+-        }
+-        if (flags & G_ASK_PASSWORD_NEED_PASSWORD)
+-        {
+-#ifndef NDEBUG
+-            std::cout << std::hex << std::this_thread::get_id() << std::dec
+-                      << " Gvfs on signal_ask_password NEED PASSWORD" << std::endl;
+-#endif // NDEBUG
+-            // trigger password name enter callback, call passwd functor
+-        }
+-    }
+-    mount_operation->reply(Gio::MOUNT_OPERATION_HANDLED);
+-}
+-
+-#else // USE_GIO_MOUNTOPERATION_ONLY
+-
+-void GvfsService::on_ask_question(GMountOperation* op, char* message,
+-                                  char** choices, gpointer user_data)
+-{
+-    (void)user_data;
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " on signal_ask_question: " << message << std::endl
+-              << std::hex << std::this_thread::get_id() << std::dec
+-              << " choices:" << std::endl;
+-    int i = 0;
+-    char** choice = choices;
+-    while (*choice)
+-    {
+-        std::cout << i << " " << *choice << std::endl;
+-        i++;
+-        choice++;
+-    }
+-#endif // NDEBUG
+-    if (m_uiCallbacks)
+-        {
+-            int answer = g_mount_operation_get_choice(op);
+-            m_uiCallbacks->onAskQuestion(message, choices, answer);
+-            if (answer != -1)
+-                {
+-                    g_mount_operation_set_choice(op, answer);
+-                    g_mount_operation_reply(op, G_MOUNT_OPERATION_HANDLED);
+-                }
+-                else g_mount_operation_reply(op, G_MOUNT_OPERATION_ABORTED);
+-        }
+-        else g_mount_operation_reply(op, G_MOUNT_OPERATION_HANDLED);
+-}
+-
+-void GvfsService::on_ask_password(GMountOperation* op, const char* message,
+-                                  const char* default_user,
+-                                  const char* default_domain,
+-                                  GAskPasswordFlags flags)
+-{
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " Gvfs on signal_ask_password ask password: "
+-              << message << std::endl
+-              << std::hex << std::this_thread::get_id() << std::dec
+-              << " Gvfs on signal_ask_password default user: "
+-              << default_user << std::endl
+-              << std::hex << std::this_thread::get_id() << std::dec
+-              << " Gvfs on signal_ask_password default domain: "
+-              << default_domain << std::endl;
+-#endif // NDEBUG
+-    if ((flags & G_ASK_PASSWORD_ANONYMOUS_SUPPORTED) &&
+-        (g_mount_operation_get_username(op) == nullptr) &&
+-        (g_mount_operation_get_password(op) == nullptr))
+-    {
+-#ifndef NDEBUG
+-        std::cout << std::hex << std::this_thread::get_id() << std::dec
+-                  << " Gvfs on signal_ask_password set anonymous" << std::endl;
+-#endif // NDEBUG
+-        g_mount_operation_set_anonymous(op, true);
+-    }
+-    g_mount_operation_reply(op, G_MOUNT_OPERATION_HANDLED);
+-}
+-
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-
+-void GvfsService::on_aborted(Glib::RefPtr<Gio::MountOperation>& mount_operation)
+-{
+-std::cout << std::hex << std::this_thread::get_id() << std::dec
+-<< " on signal_aborted" << std::endl;
+-}
+-
+-void GvfsService::mount_cb(Glib::RefPtr<Gio::AsyncResult>& result)
+-{
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " GvfsService::mount_cb()" << std::endl;
+-#endif // NDEBUG
+-    try
+-    {
+-        m_file->mount_enclosing_volume_finish(result);
+-    }
+-    catch (const Glib::Error& ex)
+-    {
+-        std::cerr << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::mount_cb() Glib::Error: "<< ex.what().raw()
+-                  << std::endl;
+-        // fill exception
+-        m_exception = std::make_shared<GvfsServiceException>(ex.domain(), ex.code(), ex.what());
+-    }
+-    m_mainLoop->quit();
+-}
+-
+-bool GvfsService::unmount_cb(Glib::RefPtr<Gio::AsyncResult> &result)
+-{
+-    Glib::RefPtr<Gio::Mount> mount = Glib::RefPtr<Gio::Mount>::cast_dynamic(result->get_source_object_base());
+-    bool success = false;
+-    try
+-    {
+-        success = mount->unmount_finish(result);
+-    }
+-    catch (const Glib::Error& ex)
+-    {
+-        std::cerr << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::unmount_cb() Glib::Error: "<< ex.what().raw()
+-                  << std::endl;
+-        // fill exception
+-        m_exception = std::make_shared<GvfsServiceException>(ex.domain(), ex.code(), ex.what());
+-    }
+-    m_mainLoop->quit();
+-    return success;
+-}
+-
+-Glib::RefPtr<Gio::Mount> GvfsService::find_mount_cb(Glib::RefPtr<Gio::AsyncResult>& result)
+-{
+-#ifndef NDEBUG
+-    std::cout << std::hex << std::this_thread::get_id() << std::dec
+-              << " GvfsService::find_mount_cb()" << std::endl;
+-#endif // NDEBUG
+-    Glib::RefPtr<Gio::Mount> l_mount;
+-    try
+-    {
+-        l_mount = m_file->find_enclosing_mount_finish(result);
+-    }
+-    catch (const Glib::Error& ex)
+-    {
+-        std::cerr << std::hex << std::this_thread::get_id() << std::dec
+-                  << " GvfsService::find_mount_cb() Glib::Error: "
+-                  << ex.what().raw() << std::endl;
+-        // fill exception
+-        m_exception = std::make_shared<GvfsServiceException>(ex.domain(), ex.code(), ex.what());
+-    }
+-    m_mainLoop->quit();
+-    return l_mount;
+-}
+diff --git a/src/GvfsService.h b/src/GvfsService.h
+deleted file mode 100644
+index 2ee1564..0000000
+--- a/src/GvfsService.h
++++ /dev/null
+@@ -1,266 +0,0 @@
+-#pragma once
+-
+-#include <memory>
+-#include <string>
+-#include <thread>
+-#include <vector>
+-#include <gtkmm.h>
+-#include "glibmmconf.h"
+-#include "GvfsServiceException.h"
+-
+-class UiCallbacks;
+-
+-/// 
+-/// @brief Обертка вокруг Gtkmm для операций с ресурсами GVFS
+-
+-/// Реализует три операции:
+-/// * подсоединение ресурса;
+-/// * отсоединение ресурса;
+-/// * проверка статуса ресурса (подсоединен или нет).
+-///
+-/// Хотя внутри операции выполняются асинхронно, интерфейс самого класса --
+-/// синхронный. После завершения одной из трех вышеуказанных операций в этом
+-/// же экземпляре может быть запущена другая.
+-///
+-/// @authors invy, cycleg
+-///
+-class GvfsService
+-{
+-public:
+-    ///
+-    /// Конструктор.
+-    ///
+-    /// @param [in] uic Обратные вызовы для взаимодействия с пользователем
+-    ///                 (необязательный).
+-    ///
+-    /// Через обратные вызовы реализуется шаблон "Стратегия" для данного
+-    /// класса. Если они отсутствуют, то операции производятся без участия
+-    /// пользователя.
+-    ///
+-    GvfsService(UiCallbacks* uic = nullptr);
+-
+-    ///
+-    /// Имя подмонтированного ресурса.
+-    ///
+-    /// @return Имя подмонтированного ресурса.
+-    ///
+-    /// Если ресурс не подмонтирован -- пустая строка.
+-    ///
+-    inline const std::string& getMountName() const { return m_mountName; }
+-    ///
+-    /// Абсолютный путь в локальной файловой системе к подмонтированному
+-    /// ресурсу.
+-    ///
+-    /// @return Путь в локальной файловой системе.
+-    ///
+-    /// Если ресурс не подмонтирован -- пустая строка.
+-    ///
+-    inline const std::string& getMountPath() const { return m_mountPath; }
+-    ///
+-    /// Схема из URI подмонтированного ресурса.
+-    ///
+-    /// @return Схема из URI.
+-    ///
+-    /// Если ресурс не подмонтирован -- пустая строка.
+-    ///
+-    inline const std::string& getMountScheme() const { return m_mountScheme; }
+-
+-    ///
+-    /// Подсоединить указанный ресурс.
+-    ///
+-    /// @param [in] resPath URL ресурса.
+-    /// @param [in] userName Имя пользователя для аутентификации на ресурсе.
+-    /// @param [in] password Пароль для аутентификации на ресурсе.
+-    /// @return Результат операции.
+-    /// @throw GvfsServiceException
+-    ///
+-    /// В случае неудачного завершения операции порождает исключение
+-    /// GvfsServiceException.
+-    ///
+-    /// В случае успеха заполняются свойства "имя ресурса", "путь к ресурсу"
+-    /// и "схема из URI ресурса".
+-    ///
+-    /// Если в данном экземпляре уже запущена другая операция, немедленно
+-    /// возвращает false (для использования в будущем).
+-    ///
+-    bool mount(const std::string& resPath, const std::string &userName,
+-               const std::string &password);
+-    ///
+-    /// Отсоединить указанный ресурс.
+-    ///
+-    /// @param [in] resPath URL ресурса.
+-    /// @return Результат операции.
+-    /// @throw GvfsServiceException
+-    ///
+-    /// В случае неудачного завершения операции может породить исключение
+-    /// GvfsServiceException.
+-    ///
+-    /// Если возвращает true, то ресурс успешно отсоединен или не был
+-    /// подмонтирован. В случае false - ресурс отмонтировать не удалось.
+-    /// Ошибки трактуются как отсутствие соединения с ресурсом.
+-    ///
+-    /// Если соединение отсутствует или ресурс успешно отмонтирован,
+-    /// свойства "имя ресурса", "путь к ресурсу" и "схема из URI ресурса"
+-    /// сбрасываются.
+-    ///
+-    /// Если в данном экземпляре уже запущена другая операция, немедленно
+-    /// возвращает false (для использования в будущем).
+-    ///
+-    bool umount(const std::string& resPath);
+-    ///
+-    /// Проверить статус, наличие соединения, ресурса.
+-    ///
+-    /// @param [in] resPath URL ресурса.
+-    /// @return Результат операции.
+-    ///
+-    /// В случае, если ресурс подсоединен, заполняются свойства "имя
+-    /// ресурса", "путь к ресурсу" и "схема из URI ресурса".
+-    ///
+-    /// Если в данном экземпляре уже запущена другая операция, немедленно
+-    /// возвращает false (для использования в будущем).
+-    ///
+-    bool mounted(const std::string& resPath);
+-
+-private:
+-
+-#ifdef USE_GIO_MOUNTOPERATION_ONLY
+-// "Чистые" C++-слоты отложены до лучших времен. Подробнее см. в
+-// GvfsService.cpp.
+-
+-    ///
+-    /// Слот обработки сигнала "ask question" в процедуре монтирования.
+-    ///
+-    /// @param [in] mount_operation Текущая операция монтирования.
+-    /// @param [in] msg Сообщение (вопрос) пользователю.
+-    /// @param [in] choices Варианты ответа.
+-    ///
+-    /// Через указатель на экземпляр класса UiCallbacks вопрос и варианты
+-    /// ответа отображаются пользователю, а выбранный вариант передается
+-    /// в операцию монтирования. Если пользователь откзывается от выбора,
+-    /// процедура прерывается.
+-    ///
+-    /// Если свойство m_uiCallbacks не заполнено, процедура продолжается
+-    /// таким образом, как будто выбран вариант по умолчанию - первый из
+-    /// предложенных.
+-    ///
+-    void on_ask_question(Glib::RefPtr<Gio::MountOperation>& mount_operation,
+-                         const Glib::ustring& msg,
+-                         const std::vector<Glib::ustring>& choices);
+-    ///
+-    /// Слот обработки сигнала "ask password" в процедуре монтирования.
+-    ///
+-    /// @param [in] mount_operation Текущая операция монтирования.
+-    /// @param [in] msg Сообщение пользователю.
+-    /// @param [in] defaultUser Имя пользователя по умолчанию.
+-    /// @param [in] defaultdomain Домен по умолчанию.
+-    /// @param [in] flags Флаги (опции) запроса.
+-    ///
+-    /// В текущей реализации слот может только разрешить анонимное соединение,
+-    /// в начале процедуры запрещенное. Все аутентификационные атрибуты (имя
+-    /// пользователя и пароль, домен в текущей реализации всегда пустая
+-    /// строка) задаются в начале процедуры, в методе mount(). Анонимное
+-    /// подключение возможно, если не заданы ни имя пользователя, ни пароль.
+-    ///
+-    void on_ask_password(Glib::RefPtr<Gio::MountOperation>& mount_operation,
+-                         const Glib::ustring& msg,
+-                         const Glib::ustring& defaultUser,
+-                         const Glib::ustring& defaultdomain,
+-                         Gio::AskPasswordFlags flags);
+-#else
+-// "Смешанные" слоты обработки сигналов. Слоты регистрируются через
+-// C-интерфейс glib, подробнее см. в GvfsService.cpp.
+-
+-    ///
+-    /// Слот обработки сигнала "ask question" в процедуре монтирования.
+-    ///
+-    /// @param [in] op Текущая операция монтирования.
+-    /// @param [in] message Сообщение (вопрос) пользователю.
+-    /// @param [in] choices Варианты ответа.
+-    /// @param [in] user_data Расширенные данные (не используется).
+-    ///
+-    /// Через указатель на экземпляр класса UiCallbacks вопрос и варианты
+-    /// ответа отображаются пользователю, а выбранный вариант передается
+-    /// в операцию монтирования. Если пользователь откзывается от выбора,
+-    /// процедура монтирования прерывается.
+-    ///
+-    /// Если свойство m_uiCallbacks не заполнено, процедура продолжается
+-    /// таким образом, как будто выбран вариант по умолчанию -- первый из
+-    /// предложенных.
+-    ///
+-    void on_ask_question(GMountOperation* op, char* message, char** choices,
+-                         gpointer user_data);
+-    ///
+-    /// Слот обработки сигнала "ask password" в процедуре монтирования.
+-    ///
+-    /// @param [in] op Текущая операция монтирования.
+-    /// @param [in] message Сообщение пользователю.
+-    /// @param [in] default_user Имя пользователя по умолчанию.
+-    /// @param [in] default_domain Домен по умолчанию.
+-    /// @param [in] flags Флаги (опции) запроса.
+-    ///
+-    /// В текущей реализации слот может только разрешить анонимное соединение,
+-    /// в начале процедуры запрещенное. Все аутентификационные атрибуты (имя
+-    /// пользователя и пароль, домен в текущей реализации всегда пустая
+-    /// строка) задаются в начале процедуры, в методе mount(). Анонимное
+-    /// подключение возможно, если не заданы ни имя пользователя, ни пароль.
+-    ///
+-    void on_ask_password(GMountOperation* op, const char* message,
+-                         const char* default_user, const char* default_domain,
+-                         GAskPasswordFlags flags);
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-
+-// "Чистый" C++-слот.
+-
+-    ///
+-    /// Слот обработки сигнала "aborted" в процедуре монтирования.
+-    ///
+-    /// @param [in] mount_operation Текущая операция монтирования.
+-    ///
+-    /// В текущей реализации -- заглушка.
+-    ///
+-    void on_aborted(Glib::RefPtr<Gio::MountOperation>& mount_operation);
+-
+-    ///
+-    /// Слот асинхронного завершения процедуры монтирования.
+-    ///
+-    /// @param [in] result Результат текущей операции.
+-    ///
+-    /// В случае возникновения исключения в слоте, оно транслируется в
+-    /// GvfsServiceException и сохраняется в свойстве m_exception. Это
+-    /// исключение будет проброшено в методе mount().
+-    ///
+-    void mount_cb(Glib::RefPtr<Gio::AsyncResult>& result);
+-    ///
+-    /// Слот асинхронного завершения процедуры отмонтирования.
+-    ///
+-    /// @param [in] result Результат текущей операции.
+-    /// @return Отмонтирован ресурс или нет.
+-    ///
+-    /// В случае возникновения исключения в слоте, оно транслируется в
+-    /// GvfsServiceException и сохраняется в свойстве m_exception. Это
+-    /// исключение будет проброшено в методе umount().
+-    ///
+-    bool unmount_cb(Glib::RefPtr<Gio::AsyncResult>& result);
+-    ///
+-    /// Слот асинхронного завершения проверки статуса ресурса.
+-    ///
+-    /// @param [in] result Результат текущей операции.
+-    /// @return Указатель на экземпляр Gio::Mount для искомого ресурса.
+-    ///
+-    /// Если ресурс не смонтирован ранее, возвращает пустой указатель.
+-    ///
+-    Glib::RefPtr<Gio::Mount> find_mount_cb(Glib::RefPtr<Gio::AsyncResult>& result);
+-
+-    std::string m_mountName; ///< Свойство "имя ресурса" для текущего
+-                             ///< смонтированного ресурса.
+-    std::string m_mountPath; ///< Свойство "путь к ресурсу" для текущего
+-                             ///< смонтированного ресурса.
+-    std::string m_mountScheme; ///< Свойство "схема из URI ресурса" для
+-                               ///< текущего смонтированного ресурса.
+-    Glib::RefPtr<Gio::File> m_file; ///< Соответствует ресурсу текущей операции.
+-    Glib::RefPtr<Glib::MainLoop> m_mainLoop; ///< Главный цикл glib.
+-    std::shared_ptr<GvfsServiceException> m_exception; ///< Исключение, возникшее
+-                                                       ///< в ходе процедуры
+-                                                       ///< монтирования/отмонтирования.
+-    UiCallbacks* m_uiCallbacks; ///< Обратные вызовы UI.
+-};
+diff --git a/src/GvfsServiceException.h b/src/GvfsServiceException.h
+deleted file mode 100644
+index 0b19012..0000000
+--- a/src/GvfsServiceException.h
++++ /dev/null
+@@ -1,32 +0,0 @@
+-#pragma once
+-
+-#include <glibmm/error.h>
+-
+-/// 
+-/// @brief Класс-исключение для ошибок GvfsService
+-
+-/// @author cycleg
+-///
+-class GvfsServiceException: public Glib::Error
+-{
+-  public:
+-    ///
+-    /// Конструктор.
+-    ///
+-    GvfsServiceException(): Error() {}
+-    ///
+-    /// Конструктор.
+-    ///
+-    /// @param [in] error_domain
+-    /// @param [in] error_code
+-    /// @param [in] message
+-    ///
+-    GvfsServiceException(GQuark error_domain, int error_code, const Glib::ustring& message):
+-      Error(error_domain, error_code, message) {}
+-    ///
+-    /// Копирующий конструктор.
+-    ///
+-    /// @param [in] other Копируемый экземпляр класса.
+-    ///
+-    GvfsServiceException(const GvfsServiceException& other): Error(other) {}
+-};
+diff --git a/src/GvfsServiceMonitor.cpp b/src/GvfsServiceMonitor.cpp
+deleted file mode 100644
+index f61bc1f..0000000
+--- a/src/GvfsServiceMonitor.cpp
++++ /dev/null
+@@ -1,373 +0,0 @@
+-#include <functional>
+-#include <iostream>
+-#include <string>
+-#include <vector>
+-#include "Plugin.h"
+-#include "GvfsServiceMonitor.h"
+-
+-#ifndef USE_GIO_MOUNTOPERATION_ONLY
+-namespace {
+-
+-extern "C" void monitor_mount_added_wrapper(GVolumeMonitor* volume_monitor,
+-                                             GMount* mount)
+-{
+-  GvfsServiceMonitor::instance().onMountAdded(volume_monitor, mount);
+-}
+-
+-extern "C" void monitor_mount_removed_wrapper(GVolumeMonitor* volume_monitor,
+-                                              GMount* mount)
+-{
+-  GvfsServiceMonitor::instance().onMountRemoved(volume_monitor, mount);
+-}
+-
+-extern "C" void monitor_mount_changed_wrapper(GVolumeMonitor* volume_monitor,
+-                                              GMount* mount)
+-{
+-  GvfsServiceMonitor::instance().onMountChanged(volume_monitor, mount);
+-}
+-
+-extern "C" void monitor_mount_pre_unmount_wrapper(GVolumeMonitor* volume_monitor,
+-                                                  GMount* mount)
+-{
+-  GvfsServiceMonitor::instance().onMountPreunmount(volume_monitor, mount);
+-}
+-
+-} // anonymous namespace
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-
+-GvfsServiceMonitor GvfsServiceMonitor::m_instance;
+-
+-GvfsServiceMonitor::GvfsServiceMonitor():
+-  m_quit(false)
+-{
+-}
+-
+-GvfsServiceMonitor::~GvfsServiceMonitor()
+-{
+-  if ((m_mainLoop.operator->() != nullptr) && m_mainLoop->is_running())
+-    quit();
+-}
+-
+-#ifdef USE_GIO_MOUNTOPERATION_ONLY
+-void GvfsServiceMonitor::onMountAdded(const Glib::RefPtr<Gio::Mount>& mount)
+-{
+-  std::string name, path, scheme;
+-  name = mount->get_name();
+-  Glib::RefPtr< const Gio::File > file = mount->get_root();
+-  path = file->get_path();
+-  scheme = file->get_uri_scheme();
+-//  Glib::object_unref(file);
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountAdded() name: " << name << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountAdded() path: " << path << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountAdded() scheme: " << scheme << std::endl;
+-#endif // NDEBUG
+-  JobPtr job(new Job());
+-  job->mount = true;
+-  m_jobs.put(job);
+-  m_jobs.notify_one();
+-}
+-
+-void GvfsServiceMonitor::onMountRemoved(const Glib::RefPtr<Gio::Mount>& mount)
+-{
+-  JobPtr job(new Job());
+-  job->name = mount->get_name();
+-  Glib::RefPtr< const Gio::File > file = mount->get_root();
+-  job->path = file->get_path();
+-  job->scheme = file->get_uri_scheme();
+-//  Gio::File::object_unref(file);
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountRemoved() name: " << job->name << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountRemoved() path: " << job->path << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountRemoved() scheme: " << job->scheme << std::endl;
+-#endif // NDEBUG
+-  m_jobs.put(job);
+-  m_jobs.notify_one();
+-}
+-
+-void GvfsServiceMonitor::onMountChanged(const Glib::RefPtr<Gio::Mount>& mount)
+-{
+-  std::string name, path, scheme;
+-  name = mount->get_name();
+-  Glib::RefPtr< const Gio::File > file = mount->get_root();
+-  path = file->get_path();
+-  scheme = file->get_uri_scheme();
+-//  Gio::File::object_unref(file);
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountChanged() name: " << name << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountChanged() path: " << path << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountChanged() scheme: " << scheme << std::endl;
+-#endif // NDEBUG
+-}
+-
+-void GvfsServiceMonitor::onMountPreunmount(const Glib::RefPtr<Gio::Mount>& mount)
+-{
+-  std::string name, path, scheme;
+-  name = mount->get_name();
+-  Glib::RefPtr< const Gio::File > file = mount->get_root();
+-  path = file->get_path();
+-  scheme = file->get_uri_scheme();
+-//  Gio::File::object_unref(file);
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountPreunmount name: " << name << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountPreunmount path: " << path << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountPreunmount scheme: " << scheme << std::endl;
+-#endif // NDEBUG
+-}
+-#else // USE_GIO_MOUNTOPERATION_ONLY
+-void GvfsServiceMonitor::onMountAdded(GVolumeMonitor* monitor, GMount* mount)
+-{
+-  std::string name, path, scheme;
+-  char* buffer = nullptr;
+-  buffer = g_mount_get_name(mount);
+-  name = buffer;
+-  g_free(buffer);
+-  GFile* file = g_mount_get_root(mount);
+-  if (file)
+-  {
+-    buffer = g_file_get_path(file);
+-    path = buffer;
+-    g_free(buffer);
+-    buffer = g_file_get_uri_scheme(file);
+-    if (buffer)
+-    {
+-      scheme = buffer;
+-      g_free(buffer);
+-    }
+-    g_object_unref(file);
+-  }
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountAdded() name: " << name << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountAdded() path: " << path << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountAdded() scheme: " << scheme << std::endl;
+-#endif // NDEBUG
+-  JobPtr job(new Job());
+-  job->mount = true;
+-  m_jobs.put(job);
+-  m_jobs.notify_one();
+-}
+-
+-void GvfsServiceMonitor::onMountRemoved(GVolumeMonitor* monitor, GMount* mount)
+-{
+-  char* buffer = nullptr;
+-  JobPtr job(new Job());
+-  buffer = g_mount_get_name(mount);
+-  job->name = buffer;
+-  g_free(buffer);
+-  GFile* file = g_mount_get_root(mount);
+-  if (file)
+-  {
+-    buffer = g_file_get_path(file);
+-    job->path = buffer;
+-    g_free(buffer);
+-    buffer = g_file_get_uri_scheme(file);
+-    if (buffer)
+-    {
+-      job->scheme = buffer;
+-      g_free(buffer);
+-    }
+-    g_object_unref(file);
+-  }
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountRemoved() name: " << job->name << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountRemoved() path: " << job->path << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountRemoved() scheme: " << job->scheme << std::endl;
+-#endif // NDEBUG
+-  m_jobs.put(job);
+-  m_jobs.notify_one();
+-}
+-
+-void GvfsServiceMonitor::onMountChanged(GVolumeMonitor* monitor, GMount* mount)
+-{
+-  std::string name, path, scheme;
+-  char* buffer = nullptr;
+-  buffer = g_mount_get_name(mount);
+-  name = buffer;
+-  g_free(buffer);
+-  GFile* file = g_mount_get_root(mount);
+-  if (file)
+-  {
+-    buffer = g_file_get_path(file);
+-    path = buffer;
+-    g_free(buffer);
+-    buffer = g_file_get_uri_scheme(file);
+-    if (buffer)
+-    {
+-      scheme = buffer;
+-      g_free(buffer);
+-    }
+-    g_object_unref(file);
+-  }
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountChanged() name: " << name << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountChanged() path: " << path << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountChanged() scheme: " << scheme << std::endl;
+-#endif // NDEBUG
+-}
+-
+-void GvfsServiceMonitor::onMountPreunmount(GVolumeMonitor* monitor,
+-                                           GMount* mount)
+-{
+-  std::string name, path, scheme;
+-  char* buffer = nullptr;
+-  buffer = g_mount_get_name(mount);
+-  name = buffer;
+-  g_free(buffer);
+-  GFile* file = g_mount_get_root(mount);
+-  if (file)
+-  {
+-    buffer = g_file_get_path(file);
+-    path = buffer;
+-    g_free(buffer);
+-    buffer = g_file_get_uri_scheme(file);
+-    if (buffer)
+-    {
+-      scheme = buffer;
+-      g_free(buffer);
+-    }
+-    g_object_unref(file);
+-  }
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountPreunmount name: " << name << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountPreunmount path: " << path << std::endl
+-            << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::onMountPreunmount scheme: " << scheme << std::endl;
+-#endif // NDEBUG
+-}
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-
+-void GvfsServiceMonitor::run()
+-{
+-  if ((m_mainLoop.operator->() != nullptr) && m_mainLoop->is_running())
+-    return;
+-  // запускаем главный цикл монитора в отдельном потоке
+-  m_thread = std::make_shared<std::thread>(std::bind(&GvfsServiceMonitor::loop,
+-                                                     this));
+-  // запускаем обработчик сигналов в отдельном потоке
+-  m_quit = false;
+-  m_worker = std::make_shared<std::thread>(std::bind(&GvfsServiceMonitor::worker,
+-                                                     this));
+-}
+-
+-void GvfsServiceMonitor::quit()
+-{
+-  if ((m_mainLoop.operator->() == nullptr) ||
+-      ((m_mainLoop.operator->() != nullptr) && !m_mainLoop->is_running()))
+-    return;
+-  m_quit = true;
+-  m_mainLoop->quit();
+-  m_thread->join();
+-  m_worker->join();
+-}
+-
+-void GvfsServiceMonitor::loop()
+-{
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::loop() run" << std::endl;
+-#endif // NDEBUG
+-#ifdef USE_GIO_MOUNTOPERATION_ONLY
+-  using namespace std::placeholders;
+-  // извлекаем указатель на Volume Monitor
+-  Glib::RefPtr<Gio::VolumeMonitor> monitor = Gio::VolumeMonitor::get();
+-  std::vector<sigc::connection> handlers;
+-  // подключаем к сигналам наши слоты
+-  handlers.push_back(monitor->signal_mount_added().connect(
+-    std::bind(&GvfsServiceMonitor::onMountAdded, this, _1)
+-  ));
+-  handlers.push_back(monitor->signal_mount_removed().connect(
+-    std::bind(&GvfsServiceMonitor::onMountRemoved, this, _1)
+-  ));
+-  handlers.push_back(monitor->signal_mount_changed().connect(
+-    std::bind(&GvfsServiceMonitor::onMountChanged, this, _1)
+-  ));
+-  handlers.push_back(monitor->signal_mount_pre_unmount().connect(
+-    std::bind(&GvfsServiceMonitor::onMountPreunmount, this, _1)
+-  ));
+-#else // USE_GIO_MOUNTOPERATION_ONLY
+-  // создаем volume monitor в контексте потока
+-  GVolumeMonitor* monitor = g_volume_monitor_get();
+-  std::vector<gulong> handlers;
+-  // подключаем к сигналам наши слоты через обертки в виде C-функций
+-  handlers.push_back(g_signal_connect(monitor, "mount-added",
+-                                      G_CALLBACK(monitor_mount_added_wrapper),
+-                                      nullptr));
+-  handlers.push_back(g_signal_connect(monitor, "mount-removed",
+-                                      G_CALLBACK(monitor_mount_removed_wrapper),
+-                                      nullptr));
+-  handlers.push_back(g_signal_connect(monitor, "mount-changed",
+-                                      G_CALLBACK(monitor_mount_changed_wrapper),
+-                                      nullptr));
+-  handlers.push_back(g_signal_connect(monitor, "mount-pre-unmount",
+-                                      G_CALLBACK(monitor_mount_pre_unmount_wrapper),
+-                                      nullptr));
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-  m_mainLoop = Glib::MainLoop::create(false);
+-  m_mainLoop->run();
+-  // отключаем наши слоты от сигналов
+-  for (auto handler: handlers)
+-#ifdef USE_GIO_MOUNTOPERATION_ONLY
+-    handler.disconnect();
+-#else
+-    g_signal_handler_disconnect(monitor, handler);
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-  handlers.clear();
+-  // больше volume monitor не нужен
+-#ifndef USE_GIO_MOUNTOPERATION_ONLY
+-//  Gio::VolumeMonitor::object_unref(monitor);
+-// #else
+-  g_object_unref(monitor);
+-  monitor = nullptr;
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::loop() end" << std::endl;
+-#endif //
+-}
+-
+-void GvfsServiceMonitor::worker()
+-{
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::worker() run" << std::endl;
+-#endif // NDEBUG
+-  while (!m_quit)
+-  {
+-    if (!m_jobs.wait_for(std::chrono::milliseconds(500)))
+-    {
+-      // есть новое задание
+-      JobPtr job(m_jobs.get());
+-      if (job->mount)
+-        Plugin::getInstance().onPointMounted();
+-        else Plugin::getInstance().onPointUnmounted(job->name, job->path,
+-                                                    job->scheme);
+-    }
+-  }
+-#ifndef NDEBUG
+-  std::cout << std::hex << std::this_thread::get_id() << std::dec
+-            << " GvfsServiceMonitor::worker() end" << std::endl;
+-#endif // NDEBUG
+-}
+diff --git a/src/GvfsServiceMonitor.h b/src/GvfsServiceMonitor.h
+deleted file mode 100644
+index f98b11a..0000000
+--- a/src/GvfsServiceMonitor.h
++++ /dev/null
+@@ -1,184 +0,0 @@
+-#pragma once
+-
+-#include <memory>
+-#include <thread>
+-#include <gtkmm.h>
+-#include "glibmmconf.h"
+-#include "JobUnitQueue.h"
+-
+-/// 
+-/// @brief Обертка вокруг GVolumeMonitor, монитор точек монтирования GVFS
+-
+-/// Реализован как синглетон.
+-///
+-/// @author cycleg
+-///
+-class GvfsServiceMonitor
+-{
+-  public:
+-    ///
+-    /// Доступ к экземпляру-синглету.
+-    ///
+-    static inline GvfsServiceMonitor& instance()
+-    {
+-      return GvfsServiceMonitor::m_instance;
+-    }
+-
+-    ///
+-    /// Деструктор.
+-    ///
+-    ~GvfsServiceMonitor();
+-
+-#ifdef USE_GIO_MOUNTOPERATION_ONLY
+-    ///
+-    /// Слот обработки сигнала "mount added" в процедуре монтирования.
+-    ///
+-    /// @param [in] mount Обрабатываемая точка монтирования.
+-    ///
+-    /// Сигнал подается по завершению операции монтирования.
+-    ///
+-    void onMountAdded(const Glib::RefPtr<Gio::Mount>& mount);
+-
+-    ///
+-    /// Слот обработки сигнала "mount removed" в процедуре отмонтирования.
+-    ///
+-    /// @param [in] mount Обрабатываемая точка монтирования.
+-    ///
+-    /// Сигнал подается по завершению операции отмонтирования. Если приемник
+-    /// владеет объектом mount, то он должен освободить его.
+-    ///
+-    void onMountRemoved(const Glib::RefPtr<Gio::Mount>& mount);
+-
+-    ///
+-    /// Слот обработки сигнала "mount changed".
+-    ///
+-    /// @param [in] mount Обрабатываемая точка монтирования.
+-    ///
+-    /// Сигнал подается, когда состояние mount меняется.
+-    ///
+-    void onMountChanged(const Glib::RefPtr<Gio::Mount>& mount);
+-
+-    ///
+-    /// Слот обработки сигнала "mount pre-unmount" в процедуре отмонтирования.
+-    ///
+-    /// @param [in] mount Обрабатываемая точка монтирования.
+-    ///
+-    /// Сигнал извещает о скором начале операции отмонтирования. Если приемник
+-    /// сигнала может удерживать точку монтирования открытым файлом, он должен
+-    /// закрыть его.
+-    ///
+-    void onMountPreunmount(const Glib::RefPtr<Gio::Mount>& mount);
+-#else // USE_GIO_MOUNTOPERATION_ONLY
+-    ///
+-    /// Слот обработки сигнала "mount added" в процедуре монтирования.
+-    ///
+-    /// @param [in] monitor Объект-монитор glib.
+-    /// @param [in] mount Обрабатываемая точка монтирования glib.
+-    ///
+-    /// Сигнал подается по завершению операции монтирования.
+-    ///
+-    void onMountAdded(GVolumeMonitor* monitor, GMount* mount);
+-
+-    ///
+-    /// Слот обработки сигнала "mount removed" в процедуре отмонтирования.
+-    ///
+-    /// @param [in] monitor Объект-монитор glib.
+-    /// @param [in] mount Обрабатываемая точка монтирования glib.
+-    ///
+-    /// Сигнал подается по завершению операции отмонтирования. Если приемник
+-    /// владеет объектом mount, то он должен освободить его.
+-    ///
+-    void onMountRemoved(GVolumeMonitor* monitor, GMount* mount);
+-
+-    ///
+-    /// Слот обработки сигнала "mount changed".
+-    ///
+-    /// @param [in] monitor Объект-монитор glib.
+-    /// @param [in] mount Обрабатываемая точка монтирования glib.
+-    ///
+-    /// Сигнал подается, когда состояние mount меняется.
+-    ///
+-    void onMountChanged(GVolumeMonitor* monitor, GMount* mount);
+-
+-    ///
+-    /// Слот обработки сигнала "mount pre-unmount" в процедуре отмонтирования.
+-    ///
+-    /// @param [in] monitor Объект-монитор glib.
+-    /// @param [in] mount Обрабатываемая точка монтирования glib.
+-    ///
+-    /// Сигнал извещает о скором начале операции отмонтирования. Если приемник
+-    /// сигнала может удерживать точку монтирования открытым файлом, он должен
+-    /// закрыть его.
+-    ///
+-    void onMountPreunmount(GVolumeMonitor* monitor, GMount* mount);
+-#endif // USE_GIO_MOUNTOPERATION_ONLY
+-
+-    ///
+-    /// Запуск главного цикла монитора, работает в отдельном потоке.
+-    ///
+-    /// Перед запуском цикла подключаются обработчики сигналов.
+-    ///
+-    void run();
+-
+-    ///
+-    /// Остановка главного цикла монитора.
+-    ///
+-    /// После остановки цикла отключаются обработчики сигналов.
+-    ///
+-    void quit();
+-
+-  private:
+-    ///
+-    /// @brief Задание на обработку подсоединения или отключения ресурса.
+-    ///
+-    struct Job
+-    {
+-      bool mount; ///< Ресурс подсоединен или отключен.
+-      std::string name, ///< Наименование ресурса.
+-                  path, ///< URL ресурса.
+-                  scheme; ///< Протокол (схема) из URL.
+-
+-      ///
+-      /// Конструктор по умолчанию.
+-      ///
+-      /// По умолчанию задание об отключившемся ресурсе.
+-      ///
+-      Job(): mount(false) {}
+-    };
+-    typedef std::shared_ptr<Job> JobPtr; ///< "Умный указатель" на Job.
+-    typedef JobUnitQueue< JobPtr > JobQueue; ///< Специализация шаблона для
+-                                             ///< очереди из "умных указателей"
+-                                             ///< на Job.
+-
+-    static GvfsServiceMonitor m_instance; ///< Экземпляр-синглет класса.
+-
+-    ///
+-    /// Конструктор.
+-    ///
+-    GvfsServiceMonitor();
+-
+-    ///
+-    /// Главный цикл приема и обработки сигналов GVFS.
+-    /// 
+-    /// Принимает и обрабатывает все сигналы, которые передаются из glib,
+-    /// включая сигналы, порождаемые в экземплярах класса GvfsService.
+-    /// Cигналы от GVolumeMonitor преобразуются в экземпляры Job, которые
+-    /// помещаются в очередь #m_jobs. Она, в свою очередь, обрабатывается в
+-    /// отдельном потоке #m_worker, в котором запущен метод worker().
+-    ///
+-    void loop();
+-
+-    ///
+-    /// Цикл асинхронной обработки заданий из #m_jobs.
+-    ///
+-    void worker();
+-
+-    Glib::RefPtr<Glib::MainLoop> m_mainLoop; ///< Главный цикл glib.
+-    std::shared_ptr<std::thread> m_thread; ///< Поток, в котором работает
+-                                           ///< главный цикл, принимающий
+-                                           ///< сигналы от gtkmm.
+-    std::shared_ptr<std::thread> m_worker; ///< Поток обработки заданий из
+-                                           ///< #m_jobs.
+-    bool m_quit; ///< Флаг остановки для потока m_worker.
+-    JobQueue m_jobs; ///< Очередь заданий для m_worker.
+-};
+diff --git a/src/JobUnitQueue.h b/src/JobUnitQueue.h
+deleted file mode 100644
+index dca9a64..0000000
+--- a/src/JobUnitQueue.h
++++ /dev/null
+@@ -1,79 +0,0 @@
+-#pragma once
+-
+-#include <chrono>
+-#include <condition_variable>
+-#include <list>
+-#include <mutex>
+-
+-/// 
+-/// Шаблонный класс очереди задач.
+-
+-/// @author golovin
+-///
+-template <class Job> class JobUnitQueue
+-{
+-  public:
+-    ///
+-    /// Поместить очередное задание в очередь.
+-    ///
+-    /// @param [in] job Помещаемое задание
+-    ///
+-    inline void put(const Job& job)
+-    {
+-      std::unique_lock<std::mutex> lock(mutex);
+-      jobs.push_back(job);
+-      (void)lock;
+-    }
+-
+-    ///
+-    /// Извлечь очередное задание из очереди.
+-    ///
+-    /// @return Задание.
+-    ///
+-    /// Если в очереди заданий нет, возвращает "пустое" задание,
+-    /// созданное конструктором по умолчанию класса Job.
+-    /// 
+-    inline Job get()
+-    {
+-      std::unique_lock<std::mutex> lock(mutex);
+-
+-      Job job;
+-      if (!jobs.empty())
+-      {
+-        job = jobs.front();
+-        jobs.pop_front();
+-      }
+-      (void)lock;
+-      return job;
+-    }
+-
+-    ///
+-    /// Ожидать появления задания в очереди с таймаутом.
+-    ///
+-    /// @param [in] abs_time Таймаут в миллисекундах.
+-    /// @return Возвращает true, если время ожидания истекло.
+-    ///
+-    inline bool wait_for(std::chrono::milliseconds const& abs_time)
+-    {
+-      std::unique_lock<std::mutex> lock(mutex);
+-      if (!jobs.empty()) return false;
+-      return (cond.wait_for(lock, abs_time) == std::cv_status::timeout);
+-    }
+-
+-    ///
+-    /// Отправить уведомление о появлении задания в очереди.
+-    ///
+-    /// Уведомление следует делать явно. При добавлении задания в очередь
+-    /// методом put() этот метод не вызывается.
+-    ///
+-    inline void notify_one()
+-    {
+-      cond.notify_one();
+-    }
+-
+-  private:
+-    std::list<Job> jobs; ///< Очередь заданий.
+-    std::mutex mutex; ///< Мутекс списка заданий и переменной состояния.
+-    std::condition_variable cond; ///< Переменная состояния для сигнала о
+-                                  ///< появлении нового задания.
+-};
+diff --git a/src/LngStringIDs.h b/src/LngStringIDs.h
+index 03d6e9a..f9ab654 100644
+--- a/src/LngStringIDs.h
++++ b/src/LngStringIDs.h
+@@ -15,8 +15,8 @@ enum LngStringsID
+   MError,
+   MWarning,
+ 
+-  MGvfsPanel,
+-  MGvfsPanelTitleNum,
++  MFusePanel,
++  MFusePanelTitleNum,
+ 
+   MDiskMenuString,
+ 
+@@ -25,8 +25,8 @@ enum LngStringsID
+   MAltShiftF2,
+   MAltShiftF3,
+ 
+-  MGvfsUpdate,
+-  MGvfsSendFiles,
++  MFuseUpdate,
++  MFuseSendFiles,
+ 
+   MSwitchMenuTxt,
+   MSwitchMenuTitle,
+diff --git a/src/MountPoint.cpp b/src/MountPoint.cpp
+index 9fdf5e0..421bffd 100644
+--- a/src/MountPoint.cpp
++++ b/src/MountPoint.cpp
+@@ -1,6 +1,5 @@
+ #include <string>
+ #include <utils.h> // far2l/utils
+-#include "GvfsService.h"
+ #include "MountPoint.h"
+ 
+ MountPoint::MountPoint(const MountPoint& other)
+@@ -45,7 +44,7 @@ MountPoint::EProtocol MountPoint::SchemeToProto(const std::string& scheme)
+     return ret;
+ }
+ 
+-bool MountPoint::mount(GvfsService* service)
++bool MountPoint::mount()
+ {
+     std::string url(StrWide2MB(m_url));
+     std::string userName(StrWide2MB(m_user));
+@@ -56,7 +55,7 @@ bool MountPoint::mount(GvfsService* service)
+     if (isMounted()) return true;
+     if (url.empty()) return false;
+ 
+-    bool success = service->mount(url, userName, password);
++    /*bool success = service->mount(url, userName, password);
+     if (success)
+     {
+         m_proto = MountPoint::SchemeToProto(service->getMountScheme());
+@@ -64,16 +63,17 @@ bool MountPoint::mount(GvfsService* service)
+         StrMB2Wide(service->getMountName(), m_shareName);
+     }
+     return success;
++/*    return true;
+ }
+ 
+-bool MountPoint::unmount(GvfsService* service)
++bool MountPoint::unmount()
+ {
+     if (!isMounted()) return true;
+ 
+     std::string url(StrWide2MB(this->m_url));
+     if (url.empty()) return false;
+ 
+-    bool success = false;
++    /*bool success = false;
+     try
+     {
+         success = service->umount(url);
+@@ -92,10 +92,11 @@ bool MountPoint::unmount(GvfsService* service)
+         m_mountPointPath.clear();
+         m_proto = EProtocol::Unknown;
+     }
+-    return success;
++    return success;*/
++    return true;
+ }
+ 
+-void MountPoint::mountCheck(GvfsService* service)
++void MountPoint::mountCheck()
+ {
+     std::string url(StrWide2MB(m_url));
+     if (url.empty())
+@@ -105,7 +106,7 @@ void MountPoint::mountCheck(GvfsService* service)
+         m_proto = EProtocol::Unknown;
+         return;
+     }
+-    if (service->mounted(url))
++/*    if (service->mounted(url))
+         {
+             m_proto = MountPoint::SchemeToProto(service->getMountScheme());
+             StrMB2Wide(service->getMountPath(), m_mountPointPath);
+@@ -116,5 +117,5 @@ void MountPoint::mountCheck(GvfsService* service)
+             m_shareName.clear();
+             m_mountPointPath.clear();
+             m_proto = EProtocol::Unknown;
+-        }
++        }*/
+ }
+diff --git a/src/MountPoint.h b/src/MountPoint.h
+index bbc4de3..35a3059 100644
+--- a/src/MountPoint.h
++++ b/src/MountPoint.h
+@@ -4,10 +4,10 @@
+ #pragma once
+ 
+ #include <string>
+-#include "GvfsServiceException.h"
++/*#include "GvfsServiceException.h"
+ 
+ class GvfsService;
+-
++*/
+ class MountPointStorage;
+ 
+ ///
+@@ -208,7 +208,7 @@ class MountPoint
+     /// перед монтированием ресурса, но после вызова mount() при выставленном
+     /// флаге пароль всегда будет пустым.
+     ///
+-    bool mount(GvfsService* service);
++    bool mount();
+     ///
+     /// Отсоединить ресурс от локальной файловой системы.
+     ///
+@@ -228,7 +228,7 @@ class MountPoint
+     /// Если ресурса не смонтирован, то метод сразу возвращает true. Если
+     /// ресурсу не назначен URL, то метод сразу возвращает false.
+     ///
+-    bool unmount(GvfsService* service);
++    bool unmount();
+     ///
+     /// Проверить статус смонтированности ресурса.
+     ///
+@@ -241,7 +241,7 @@ class MountPoint
+     /// #m_mountPointPath и #m_shareName сбрасываются, а свойство #m_proto
+     /// выставляется в Unknown.
+     ///
+-    void mountCheck(GvfsService* service);
++    void mountCheck();
+ 
+   private:
+     ///
+diff --git a/src/MountPointStorage.h b/src/MountPointStorage.h
+index 8eb1ebd..5c13bd4 100644
+--- a/src/MountPointStorage.h
++++ b/src/MountPointStorage.h
+@@ -13,11 +13,11 @@
+ 
+ /// Описания ресурсов (класс MountPoint) хранятся в реестре far2l в подпапке
+ /// папки параметров плагина. Ей соответствует путь в реестре
+-/// "Software/Far2/gvfspanel/Resources".
++/// "Software/Far2/FusePanel/Resources".
+ ///
+ /// Формат хранилища версионирован. Поддерживается обновление записей более
+ /// старых форматов в текущий. Номер версии сохраняется в хранилище в ключе
+-/// "Software/Far2/gvfspanel/Resources/Version". Обновление хранилища, если
++/// "Software/Far2/FusePanel/Resources/Version". Обновление хранилища, если
+ /// необходимо, производится при первом к нему обращении на чтение или запись.
+ ///
+ /// Каждая запись о ресурсе соответствует одной подпапке в папке хранилища.
+diff --git a/src/Plugin.cpp b/src/Plugin.cpp
+index ffd0561..51625bb 100644
+--- a/src/Plugin.cpp
++++ b/src/Plugin.cpp
+@@ -2,11 +2,8 @@
+ #include <utils.h>
+ #include "Configuration.h"
+ #include "dialogs.h"
+-#include "GvfsService.h"
+-#include "GvfsServiceMonitor.h"
+ #include "LngStringIDs.h"
+ #include "MountPointStorage.h"
+-#include "UiCallbacks.h"
+ #include "Plugin.h"
+ 
+ #define UNUSED(x) (void)x;
+@@ -65,23 +62,24 @@ void Plugin::setStartupInfo(const PluginStartupInfo* psi)
+     MountPointStorage storage(m_registryRoot);
+     storage.LoadAll(m_mountPoints);
+     // gtkmm initialization
+-    Gio::init();
++    //Gio::init();
+     // Запускается главный цикл обработки сигналов от gtkmm (glib).
+-    GvfsServiceMonitor::instance().run();
++    //GvfsServiceMonitor::instance().run();
+ }
+ 
+ void Plugin::exitFar()
+ {
+-    GvfsServiceMonitor::instance().quit();
++    //GvfsServiceMonitor::instance().quit();
+     if (Configuration::Instance()->unmountAtExit())
+     {
+         // unmount all VFS, mounted in current session
+         for (auto& mntPoint : m_mountPoints)
+         {
++            /*
+             if (mntPoint.second.isMounted())
+                 try
+                 {
+-                    GvfsService service;
++                    //GvfsService service;
+                     m_processedPointId = mntPoint.second.getStorageId();
+                     mntPoint.second.unmount(&service);
+                     m_processedPointId.clear();
+@@ -90,6 +88,7 @@ void Plugin::exitFar()
+                 {
+                     // ignore error here
+                 }
++            */
+         }
+     }
+ }
+@@ -105,12 +104,12 @@ void Plugin::getPluginInfo(PluginInfo* info)
+     info->DiskMenuStringsNumber = Opt.AddToDisksMenu ? ARRAYSIZE(DiskMenuStrings) : 0;
+ 
+     static const wchar_t* PluginMenuStrings[1];
+-    PluginMenuStrings[0] = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MGvfsPanel);
++    PluginMenuStrings[0] = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MFusePanel);
+     info->PluginMenuStrings = Opt.AddToPluginsMenu ? PluginMenuStrings : nullptr;
+     info->PluginMenuStringsNumber = Opt.AddToPluginsMenu ? ARRAYSIZE(PluginMenuStrings) : 0;
+ 
+     static const wchar_t* PluginCfgStrings[1];
+-    PluginCfgStrings[0] = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MGvfsPanel);
++    PluginCfgStrings[0] = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MFusePanel);
+     info->PluginConfigStrings = PluginCfgStrings;
+     info->PluginConfigStringsNumber = ARRAYSIZE(PluginCfgStrings);
+     info->CommandPrefix = Opt.Prefix;
+@@ -161,7 +160,7 @@ void Plugin::getOpenPluginInfo(HANDLE Plugin, OpenPluginInfo* pluginInfo)
+ {
+     UNUSED(Plugin)
+ 
+-    static const wchar_t* pluginPanelTitle = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MGvfsPanel);
++    static const wchar_t* pluginPanelTitle = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MFusePanel);
+     pluginInfo->StructSize = sizeof(*pluginInfo);
+     pluginInfo->PanelTitle = pluginPanelTitle;
+     // panel modes
+@@ -293,7 +292,7 @@ int Plugin::processKey(HANDLE Plugin, int key, unsigned int controlState)
+         std::wstring name = item->CustomColumnData[1];
+         free(item);
+         auto it = m_mountPoints.find(name);
+-        if ((it != m_mountPoints.end()) && it->second.isMounted())
++        if ((it != m_mountPoints.end()) /*&& it->second.isMounted() */)
+         {
+             unmountResource(it->second);
+             m_pPsi.Control(Plugin, FCTL_UPDATEPANEL, 0, 0);
+@@ -328,7 +327,10 @@ int Plugin::setDirectory(HANDLE Plugin, const wchar_t* Dir, int OpMode)
+         auto it = m_mountPoints.find(std::wstring(Dir));
+         if (it != m_mountPoints.end())
+         {
+-            if (!it->second.isMounted())
++            std::string c_mpath;
++            FILE *f;
++            std::string cmd;
++            // FIXME if (!it->second.isMounted())
+             {
+                 const wchar_t* msgItems[2] = { nullptr };
+                 bool isMount = false;
+@@ -338,10 +340,52 @@ int Plugin::setDirectory(HANDLE Plugin, const wchar_t* Dir, int OpMode)
+                   if (!AskPasswordDlg(m_pPsi, it->second)) return 0;
+                 }
+                 hScreen = m_pPsi.SaveScreen(0, 0, -1, -1);
++                
++                cmd = "mkdir $XDG_RUNTIME_DIR/far2l-fuse/";
++                f = popen(cmd.c_str(), "r");
++                pclose(f);
++
++                std::string c_url = StrWide2MB(it->second.getUrl());
++                std::string c_user = StrWide2MB(it->second.getUser());
++                std::string c_password = EscapeQuotas(StrWide2MB(it->second.getPassword()));
++
++                std::string c_delimiter = "://";
++                std::string c_protocol = c_url.substr(0, c_url.find(c_delimiter));
++                std::string c_host = c_url.substr(c_url.find(c_delimiter) + 3, c_url.length());
++                std::string c_mpid = c_user + "@" + c_host;
++
++                const char * rtdir_raw = getenv("XDG_RUNTIME_DIR");
++                std::string c_rtdir (rtdir_raw);
++
++                c_mpath = "$XDG_RUNTIME_DIR/far2l-fuse/" + c_mpid;
++                c_mpath = c_rtdir + "/far2l-fuse/" + c_mpid;
++
++                cmd = "mkdir " + EscapeQuotas(c_mpath);
++                f = popen(cmd.c_str(), "r");
++                pclose(f);
++
++                // todo: mount commands depending on protocol
++                // todo: mount point paths depending on protocol
++                // todo: unmount all on far2l exit
++                // todo: check mount status
++                // mount -t cifs //host/dir /mount/point -o user=user,pass=pass,uid=pi,iocharset=utf8,file_mode=0777,dir_mode=0777,noperm
++                // mount -t davfs http(s)://addres:<port>/path /mount/point
++                cmd =
++                    "echo " +
++                    c_password +
++                    " | sshfs " +
++                    c_mpid +
++                    ":/ " +
++                    EscapeQuotas(c_mpath) +
++                    " -o password_stdin";
++                f = popen(cmd.c_str(), "r");
++                pclose(f);
++
++                /*
+                 try
+                 {
+                     UiCallbacks callbacks(m_pPsi);
+-                    GvfsService service(&callbacks);
++                    //GvfsService service(&callbacks);
+                     msgItems[0] = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MResourceMount);
+                     msgItems[1] = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MPleaseWait);
+                     m_pPsi.Message(m_pPsi.ModuleNumber, 0, nullptr, msgItems,
+@@ -359,14 +403,17 @@ int Plugin::setDirectory(HANDLE Plugin, const wchar_t* Dir, int OpMode)
+                     m_pPsi.Message(m_pPsi.ModuleNumber, FMSG_WARNING | FMSG_MB_OK,
+                                    nullptr, msgItems, ARRAYSIZE(msgItems), 0);
+                 }
++                */
+                 m_pPsi.RestoreScreen(hScreen);
+-                if (!isMount) return 0;
++                // FIXME if (!isMount) return 0;
+             }
+             // change directory to:
+-            std::wstring dir = it->second.getMountPath();
+-            if (!dir.empty())
++            //std::wstring dir = it->second.getMountPath();
++            std::wstring dir = StrMB2Wide(c_mpath);
++            //if (!dir.empty())
+             {
+                 m_pPsi.Control(Plugin, FCTL_SETPANELDIR, 0, (LONG_PTR)(dir.c_str()));
++
+                 return 1;
+             }
+         }
+@@ -421,7 +468,7 @@ int Plugin::deleteFiles(HANDLE Plugin, PluginPanelItem* PanelItem, int itemsNumb
+         {
+             std::lock_guard<std::mutex> lck(m_pointsMutex);
+             MountPointStorage storage(m_registryRoot);
+-            if (it->second.isMounted())
++            // if (it->second.isMounted())
+             {
+                 unmountResource(it->second);
+             }
+@@ -484,9 +531,10 @@ void Plugin::onPointMounted()
+         if (!mountPoint.second.isMounted() &&
+             (mountPoint.second.getStorageId() != m_processedPointId))
+         {
+-            GvfsService service;
++            /*GvfsService service;
+             mountPoint.second.mountCheck(&service);
+             if (mountPoint.second.isMounted()) changed = true;
++            */
+         }
+     }
+     lck.unlock();
+@@ -517,7 +565,7 @@ void Plugin::onPointUnmounted(const std::string& name, const std::string& path,
+         {
+             // фактически точка уже отмонтирована, поэтому "большой круг"
+             // много времени не займет
+-            GvfsService service;
++            /*GvfsService service;
+             try
+             {
+                 mountPoint.second.unmount(&service);
+@@ -526,7 +574,7 @@ void Plugin::onPointUnmounted(const std::string& name, const std::string& path,
+             {
+                 // ignore error here
+             }
+-            changed = true;
++            changed = true;*/
+         }
+     }
+     lck.unlock();
+@@ -575,6 +623,29 @@ void Plugin::unmountResource(MountPoint& point)
+ {
+     const wchar_t* msgItems[2] = { nullptr };
+     msgItems[0] = m_pPsi.GetMsg(m_pPsi.ModuleNumber, MUnmountError);
++
++    FILE *f;
++    std::string cmd;
++    
++    std::string c_url = StrWide2MB(point.getUrl());
++    std::string c_user = StrWide2MB(point.getUser());
++    std::string c_password = EscapeQuotas(StrWide2MB(point.getPassword()));
++
++    std::string c_delimiter = "://";
++    std::string c_protocol = c_url.substr(0, c_url.find(c_delimiter));
++    std::string c_host = c_url.substr(c_url.find(c_delimiter) + 3, c_url.length());
++    std::string c_mpid = EscapeQuotas(c_user + "@" + c_host);
++
++    cmd = "fusermount -u $XDG_RUNTIME_DIR/far2l-fuse/" + c_mpid;
++    f = popen(cmd.c_str(), "r");
++    pclose(f);
++
++    // cause random hangs [if device busy?]
++    //cmd = "rm -f $XDG_RUNTIME_DIR/far2l-fuse/" + c_mpid;
++    //f = popen(cmd.c_str(), "r");
++    //pclose(f);
++
++    /*
+     try
+     {
+         GvfsService service;
+@@ -589,6 +660,7 @@ void Plugin::unmountResource(MountPoint& point)
+         m_pPsi.Message(m_pPsi.ModuleNumber, FMSG_WARNING | FMSG_MB_OK,
+                        nullptr, msgItems, ARRAYSIZE(msgItems), 0);
+     }
++    */
+ }
+ 
+ PluginPanelItem* Plugin::getPanelCurrentItem(HANDLE Plugin)
+@@ -620,8 +692,8 @@ void Plugin::checkResourcesStatus()
+     std::lock_guard<std::mutex> lck(m_pointsMutex);
+     for (auto& mountPoint : m_mountPoints)
+     {
+-        GvfsService service;
+-        mountPoint.second.mountCheck(&service);
++        //GvfsService service;
++        //mountPoint.second.mountCheck(&service);
+     }
+     m_pPsi.RestoreScreen(hScreen);
+ }
+diff --git a/src/PluginMain.cpp b/src/PluginMain.cpp
+index d841527..1403a27 100644
+--- a/src/PluginMain.cpp
++++ b/src/PluginMain.cpp
+@@ -127,7 +127,7 @@ SHAREDSYMBOL HANDLE WINAPI OpenFilePluginW(const wchar_t * fileName, const uint8
+         return INVALID_HANDLE_VALUE;
+     }
+     std::wstring name(fileName);
+-    std::wstring ext(L".gvfsmounts");
++    std::wstring ext(L".fusemounts");
+     if(!std::equal(name.rbegin(), name.rbegin()+ext.size(), ext.rbegin(), ext.rend()))
+     {
+         return INVALID_HANDLE_VALUE;
+diff --git a/src/SecretServiceStorage.cpp b/src/SecretServiceStorage.cpp
+index 35c110b..a022318 100644
+--- a/src/SecretServiceStorage.cpp
++++ b/src/SecretServiceStorage.cpp
+@@ -16,7 +16,7 @@
+ 
+ using namespace std::placeholders;
+ 
+-const char* RecordLabel = "Far-gvfs password record";
++const char* RecordLabel = "far2l-fuse password record";
+ 
+ namespace {
+ 
+@@ -137,7 +137,7 @@ const SecretSchema* SecretServiceStorageSchema() G_GNUC_CONST;
+ const SecretSchema* SecretServiceStorageSchema()
+ {
+     static const SecretSchema the_schema = {
+-        "org.far2l.gvfspanel.secure.storage.password", SECRET_SCHEMA_NONE,
++        "org.far2l.far2l-fuse.secure.storage.password", SECRET_SCHEMA_NONE,
+         {
+             {  "id", SECRET_SCHEMA_ATTRIBUTE_STRING }, ///< MountPoint storage ID
+             {  "NULL", SECRET_SCHEMA_ATTRIBUTE_STRING },
+diff --git a/src/TextFormatter.cpp b/src/TextFormatter.cpp
+deleted file mode 100644
+index d1b8147..0000000
+--- a/src/TextFormatter.cpp
++++ /dev/null
+@@ -1,247 +0,0 @@
+-#include "TextFormatter.h"
+-
+-const std::wstring TextFormatter::dropMark = L"...";
+-const wchar_t* TextFormatter::WordDelimiters = L" \t\n\r";
+-
+-TextFormatter::TextFormatter():
+-  m_textWidth(0),
+-  m_wordWrap(true),
+-  m_ignoreEmptyLines(true),
+-  m_dropRemain(false)
+-{
+-}
+-
+-void TextFormatter::FitToLines(const std::wstring& text,
+-                            std::vector<std::wstring>& lines) const
+-{
+-  lines.clear();
+-  if (!m_textWidth) return;
+-  std::wstring buffer;
+-  std::vector<std::wstring> linesBuffer;
+-  SplitLines(text, linesBuffer);
+-  for (std::wstring line : linesBuffer)
+-  {
+-    if (line.empty())
+-    {
+-      // only if not ignore empty lines
+-      lines.push_back(line);
+-      continue;
+-    }
+-    if (m_wordWrap)
+-      {
+-        std::vector<std::wstring> wordsBuffer;
+-        SplitWords(line, wordsBuffer);
+-        for (std::wstring word : wordsBuffer)
+-        {
+-          if (buffer.size() + word.size() + 1 > m_textWidth)
+-            {
+-              if (buffer.empty())
+-              {
+-                // безвыходная ситуация: слово длиннее ширины строки
+-                if (m_dropRemain)
+-                  {
+-                    buffer = word.substr(0, m_textWidth - dropMark.size());
+-                    buffer.append(dropMark);
+-                  }
+-                  else buffer = word;
+-                lines.push_back(buffer);
+-                buffer.clear();
+-              }
+-              else
+-              {
+-                lines.push_back(buffer);
+-                buffer.clear();
+-                if (word.size() > m_textWidth)
+-                  {
+-                    // безвыходная ситуация: слово длиннее ширины строки
+-                    if (m_dropRemain)
+-                      {
+-                        buffer += word.substr(0, m_textWidth - dropMark.size());
+-                        buffer.append(dropMark);
+-                      }
+-                      else buffer = word;
+-                  }
+-                  else buffer.append(word);
+-              }
+-            }
+-            else
+-            {
+-              if (!buffer.empty()) buffer.push_back(' ');
+-              buffer.append(word);
+-            }
+-        }
+-        if (!buffer.empty())
+-        {
+-          lines.push_back(buffer);
+-          buffer.clear();
+-        }
+-      }
+-      else
+-      {
+-        // lines fit to width "as is"
+-        while (!line.empty())
+-        {
+-          if (line.size() > m_textWidth)
+-            {
+-              lines.push_back(line.substr(0, m_textWidth));
+-              line.erase(0, m_textWidth);
+-            }
+-            else 
+-            {
+-              lines.push_back(line);
+-              line.clear();
+-            }
+-        }
+-      }
+-  }
+-}
+-
+-std::wstring TextFormatter::FitToLine(const std::wstring& text) const
+-{
+-  std::wstring buffer;
+-  if (!m_textWidth) return buffer;
+-  std::vector<std::wstring> linesBuffer;
+-  SplitLines(text, linesBuffer);
+-  if (linesBuffer.empty()) return buffer;
+-  std::wstring line = linesBuffer[0];
+-  if (!line.empty())
+-  {
+-    if (m_wordWrap)
+-      {
+-        std::vector<std::wstring> wordsBuffer;
+-        SplitWords(line, wordsBuffer);
+-        for (std::wstring word : wordsBuffer)
+-        {
+-          if (buffer.size() + word.size() + 1 > m_textWidth)
+-            {
+-              if (buffer.empty())
+-                {
+-                  // безвыходная ситуация: слово длиннее ширины строки
+-                  if (m_dropRemain)
+-                    {
+-                      buffer += word.substr(0, m_textWidth - dropMark.size());
+-                      buffer.append(dropMark);
+-                    }
+-                    else buffer = word;
+-                }
+-                else
+-                {
+-                  if (m_dropRemain)
+-                    {
+-                      buffer.push_back(' ');
+-                      buffer.append(word);
+-                      buffer.erase(m_textWidth - dropMark.size());
+-                      buffer.append(dropMark);
+-                    }
+-                    else if (m_textWidth - buffer.size() > 1)
+-                    {
+-                      buffer.push_back(' ');
+-                      buffer.append(word.substr(0, m_textWidth - buffer.size()));
+-                    }
+-                }
+-              break;
+-            }
+-            else
+-            {
+-              if (!buffer.empty()) buffer.push_back(' ');
+-              buffer.append(word);
+-            }
+-        }
+-      }
+-      else
+-      {
+-        if (line.size() > m_textWidth)
+-          {
+-            if (m_dropRemain)
+-              {
+-                buffer = line.substr(0, m_textWidth - dropMark.size());
+-                buffer.append(dropMark);
+-              }
+-              else buffer = line.substr(0, m_textWidth);
+-          }
+-          else buffer = line;
+-      }
+-  }
+-  if ((linesBuffer.size() > 1) && m_dropRemain)
+-  {
+-    if (m_textWidth - buffer.size() < dropMark.size())
+-      buffer.erase(m_textWidth - dropMark.size());
+-    buffer.append(dropMark);
+-  }
+-  return buffer;
+-}
+-
+-void TextFormatter::SplitLines(const std::wstring& text,
+-                            std::vector<std::wstring>& lines) const
+-{
+-  lines.clear();
+-  std::wstring::size_type pos1 = text.find_first_not_of(LinesDelimiter),
+-                          pos2 = (pos1 != std::wstring::npos) ?
+-                                 text.find_first_of(LinesDelimiter, pos1) :
+-                                 std::wstring::npos;
+-  if ((pos1 == std::wstring::npos) && (text.size() > 0))
+-  {
+-    // only empty line(s)
+-    if (m_ignoreEmptyLines) return;
+-    for (unsigned int i = 0; i < text.size(); i++)
+-      lines.push_back(std::wstring());
+-  }
+-  if ((pos1 > 0) && !m_ignoreEmptyLines)
+-  {
+-    // leading empty lines
+-    for (unsigned int i = 0; i < pos1; i++)
+-      lines.push_back(std::wstring());
+-  }
+-  while (pos2 != std::wstring::npos)
+-  {
+-    std::wstring::size_type pos3 = pos2;
+-    if (text[pos3 - 1] == '\r') pos3--;
+-    if ((pos3 != pos1) || !m_ignoreEmptyLines)
+-      lines.push_back(text.substr(pos1, pos3 - pos1));
+-    if (m_ignoreEmptyLines)
+-      {
+-        // skip repeated delimiters
+-        pos1 = text.find_first_not_of(LinesDelimiter, pos2);
+-        if (pos1 == std::wstring::npos) break;
+-        pos2 = text.find_first_of(LinesDelimiter, pos1);
+-      }
+-      else
+-      {
+-        pos1 = pos2 + 1;
+-        if (pos1 >= text.size())
+-          pos1 = pos2 = std::wstring::npos;
+-          else pos2 = text.find_first_of(LinesDelimiter, pos1);
+-      }
+-  }
+-  if (pos1 != std::wstring::npos)
+-  {
+-    // last (single) line
+-    std::wstring::size_type pos3 = text.size();
+-    if (text[pos3 - 1] == '\r') pos3--;
+-    if ((pos3 != pos1) || !m_ignoreEmptyLines)
+-      lines.push_back(text.substr(pos1, pos3 - pos1));
+-  }
+-}
+-
+-void TextFormatter::SplitWords(const std::wstring& text,
+-                            std::vector<std::wstring>& words) const
+-{
+-  words.clear();
+-  std::wstring::size_type pos1 = text.find_first_not_of(WordDelimiters),
+-                          pos2 = (pos1 != std::wstring::npos) ?
+-                                 text.find_first_of(WordDelimiters, pos1) :
+-                                 std::wstring::npos;
+-  while (pos2 != std::wstring::npos)
+-  {
+-    words.push_back(text.substr(pos1, pos2 - pos1));
+-    // skip repeated delimiters
+-    pos1 = text.find_first_not_of(WordDelimiters, pos2);
+-    if (pos1 == std::wstring::npos) break;
+-    pos2 = text.find_first_of(WordDelimiters, pos1);
+-  }
+-  if (pos1 != std::wstring::npos)
+-  {
+-    // last (single) word
+-    words.push_back(text.substr(pos1));
+-  }
+-}
+diff --git a/src/TextFormatter.h b/src/TextFormatter.h
+deleted file mode 100644
+index 3ec693a..0000000
+--- a/src/TextFormatter.h
++++ /dev/null
+@@ -1,123 +0,0 @@
+-#pragma once
+-
+-#include <string>
+-#include <vector>
+-
+-/// 
+-/// @brief Вспомогательный класс для форматирования текстовых строк.
+-
+-/// Реализует форматирование текста по нескольким параметрам:
+-///
+-/// * длина строки;
+-/// * перенос по словам (да/нет);
+-/// * пропуск пустых строк (да/нет);
+-/// * сброс не помещающегося текста и отметка этого строкой #dropMark (да/нет).
+-///
+-/// Два основных действия:
+-///
+-/// * обработать по параметрам текст из нескольких строк (абзацев) и
+-///   вернуть отформатированный текст;
+-/// * обработать текст и вернуть одну (первую) строку.
+-///
+-/// При включенном переносе по словам, если длина слова оказывается больше
+-/// длины строки и отбрасывание текста отключено, то слово вставляется в
+-/// выходную строку целиком.
+-///
+-/// Все разделители строк заменяются на пробел. Разделители строк в выходной
+-/// текст не включаются.
+-///
+-/// @author cycleg
+-///
+-class TextFormatter
+-{
+-  public:
+-    ///
+-    /// Конструктор.
+-    ///
+-    TextFormatter();
+-
+-    ///
+-    /// Задать ширину строки текста.
+-    ///
+-    /// @param [in] w Новая ширина строки.
+-    /// @return Ссылка на объект.
+-    ///
+-    inline TextFormatter& TextWidth(unsigned int w)
+-    { m_textWidth = w; return *this; }
+-    ///
+-    /// Включить/выключить перенос текста по словам.
+-    ///
+-    /// @param [in] w true -- перенос включен, false -- строка разбивается
+-    ///               произвольно.
+-    /// @return Ссылка на объект.
+-    ///
+-    inline TextFormatter& WordWrap(bool w) { m_wordWrap = w; return *this; }
+-    ///
+-    /// Включить/выключить пропуск пустых строк в оригинальном тексте.
+-    ///
+-    /// @param [in] i true -- строки пропускаются, false -- строки включаются
+-    ///               в выходной текст.
+-    /// @return Ссылка на объект.
+-    ///
+-    inline TextFormatter& IgnoreEmptyLines(bool i)
+-    { m_ignoreEmptyLines = i; return *this; }
+-    ///
+-    /// Включить/выключить отбрасывание части оригинального текста, не
+-    /// укладывающейся в формат.
+-    ///
+-    /// @param [in] d true -- текст отбрасывается, false -- нет.
+-    /// @return Ссылка на объект.
+-    ///
+-    /// Отброшенный текст заменяется на #dropMark.
+-    ///
+-    inline TextFormatter& DropRemain(bool d) { m_dropRemain = d; return *this; }
+-
+-    ///
+-    /// Форматирование текста с возвратом набора строк.
+-    ///
+-    /// @param [in] text Оригинальный текст в виде одной большой строки.
+-    /// @param [out] lines Набор переформатированных строк.
+-    ///
+-    /// Если в оригинале длина строки меньше заданной, то строка не
+-    /// переформатируется.
+-    ///
+-    void FitToLines(const std::wstring& text, std::vector<std::wstring>& lines) const;
+-    ///
+-    /// Форматирование первой строки оригинального текста.
+-    ///
+-    /// @param [in] text Оригинальный текст в виде одной большой строки.
+-    /// @return Отформатированная строка.
+-    ///
+-    /// Метод может вернуть пустую строку, если игнорирование их выключено.
+-    ///
+-    std::wstring FitToLine(const std::wstring& text) const;
+-
+-  private:
+-    static const wchar_t LinesDelimiter = '\n'; ///< Разделитель строк в исходном тексте.
+-    static const wchar_t* WordDelimiters; ///< Разделители слов в исходном тексте.
+-    static const std::wstring dropMark; ///< Метка отброшенного исходного текста.
+-
+-    ///
+-    /// Разбить оригинальный текст на строки.
+-    ///
+-    /// @param [in] text Оригинальный текст в виде одной большой строки.
+-    /// @param [out] lines Набор строк.
+-    ///
+-    /// Символ "\r" в выходной текст не включается.
+-    ///
+-    void SplitLines(const std::wstring& text, std::vector<std::wstring>& lines) const;
+-    ///
+-    /// Разбить строку на слова.
+-    ///
+-    /// @param [in] text Оригинальный текст в виде строки.
+-    /// @param [in] words Набор строк.
+-    ///
+-    /// Несколько разделителей слов подряд трактуются как один.
+-    ///
+-    void SplitWords(const std::wstring& text, std::vector<std::wstring>& words) const;
+-
+-    unsigned int m_textWidth; ///< Ширина строки.
+-    bool m_wordWrap; ///< Флаг переноса по словам.
+-    bool m_ignoreEmptyLines; ///< Флаг игнорирования пустых строк.
+-    bool m_dropRemain; ///< Флаг отбрасывания оригинального текста.
+-};
+diff --git a/src/UiCallbacks.cpp b/src/UiCallbacks.cpp
+deleted file mode 100644
+index 65f35d1..0000000
+--- a/src/UiCallbacks.cpp
++++ /dev/null
+@@ -1,58 +0,0 @@
+-#include <string>
+-#include <utils.h>
+-#include "dialogs.h"
+-#include "TextFormatter.h"
+-#include "UiCallbacks.h"
+-
+-UiCallbacks::UiCallbacks(PluginStartupInfo& info):
+-  m_pStartupInfo(info)
+-{
+-}
+-
+-void UiCallbacks::onAskQuestion(const Glib::ustring& message,
+-                                const std::vector<Glib::ustring>& choices,
+-                                int& choice) const
+-{
+-  int answer = choice;
+-  std::vector<std::wstring> messageLines, answers;
+-  TextFormatter formatter;
+-  // 3 columns - frame, 1 column - pad
+-  formatter.TextWidth(AskQuestionDlgWidth - (3 + 1) * 2)
+-           .WordWrap(true)
+-           .IgnoreEmptyLines(false)
+-           .DropRemain(true);
+-  formatter.FitToLines(MB2Wide(message.raw().c_str()), messageLines);
+-  for (auto l_choice: choices)
+-    answers.push_back(MB2Wide(l_choice.raw().c_str()));
+-  formatter.TextWidth(AskQuestionDlgWidth - 4 * 2 - 2); // another 2 columns in combobox
+-  for (auto& buf : answers) buf = formatter.FitToLine(buf);
+-  if (!AskQuestionDlg(m_pStartupInfo, AskQuestionDlgWidth, messageLines, answers,
+-                      (unsigned int&)answer))
+-    answer = -1;
+-  choice = answer;
+-}
+-
+-void UiCallbacks::onAskQuestion(char* message, char** choices, int& choice) const
+-{
+-  int answer = choice;
+-  char** l_choice = choices;
+-  std::vector<std::wstring> messageLines, answers;
+-  TextFormatter formatter;
+-  // 3 columns - frame, 1 column - pad
+-  formatter.TextWidth(AskQuestionDlgWidth - (3 + 1) * 2)
+-           .WordWrap(true)
+-           .IgnoreEmptyLines(false)
+-           .DropRemain(true);
+-  formatter.FitToLines(MB2Wide(message), messageLines);
+-  while (*l_choice)
+-  {
+-    answers.push_back(MB2Wide(*l_choice));
+-    l_choice++;
+-  }
+-  formatter.TextWidth(AskQuestionDlgWidth - 4 * 2 - 2); // another 2 columns in combobox
+-  for (auto& buf : answers) buf = formatter.FitToLine(buf);
+-  if (!AskQuestionDlg(m_pStartupInfo, AskQuestionDlgWidth, messageLines, answers,
+-                      (unsigned int&)answer))
+-    answer = -1;
+-  choice = answer;
+-}
+diff --git a/src/UiCallbacks.h b/src/UiCallbacks.h
+deleted file mode 100644
+index 18df233..0000000
+--- a/src/UiCallbacks.h
++++ /dev/null
+@@ -1,51 +0,0 @@
+-#pragma once
+-
+-#include <vector>
+-#include <glibmm/ustring.h>
+-#include <plugin.hpp>
+-
+-/// 
+-/// @brief Обратные вызовы в интерфейс пользователя (UI) из операций с ресурсами.
+-
+-/// Класс реализует шаблон "Стратегия" для класса-интерфейса к GVFS.
+-///
+-/// @author cycleg
+-///
+-class UiCallbacks
+-{
+-  public:
+-    ///
+-    /// Кнструктор.
+-    ///
+-    /// @param [in] info
+-    ///
+-    UiCallbacks(PluginStartupInfo& info);
+-
+-    ///
+-    /// Ответ пользователя в сигнале "ask question" при монтировании ресурса.
+-    ///
+-    /// @param [in] message Сообщение (вопрос) пользователю.
+-    /// @param [in] choices Варианты ответа.
+-    /// @param [in,out] choice На входе - вариант по умолчанию, на выходе --
+-    ///                        выбранный пользователем.
+-    ///
+-    void onAskQuestion(const Glib::ustring& message,
+-                       const std::vector<Glib::ustring>& choices,
+-                       int& choice) const;
+-
+-    ///
+-    /// Ответ пользователя в сигнале "ask question" при монтировании ресурса.
+-    ///
+-    /// @param [in] message Сообщение (вопрос) пользователю.
+-    /// @param [in] choices Варианты ответа.
+-    /// @param [in,out] choice На входе - вариант по умолчанию, на выходе --
+-    ///                        выбранный пользователем.
+-    ///
+-    void onAskQuestion(char* message, char** choices, int& choice) const;
+-
+-  private:
+-    static const int AskQuestionDlgWidth = 78; ///< Макс. ширина диалога
+-                                               ///< "Ask question".
+-
+-    PluginStartupInfo& m_pStartupInfo; ///< Интерактивность черех UI far2l.
+-};
+diff --git a/src/glibmmconf.h b/src/glibmmconf.h
+deleted file mode 100644
+index f113bcb..0000000
+--- a/src/glibmmconf.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-#ifndef GLIBMMCONF_H
+-#define GLIBMMCONF_H
+-
+-#if ((GLIBMM_MAJOR_VERSION > 2) || ((GLIBMM_MAJOR_VERSION == 2) && (GLIBMM_MINOR_VERSION >= 56)))
+-// #define USE_GIO_MOUNTOPERATION_ONLY
+-#endif
+-
+-#endif
