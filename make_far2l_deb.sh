@@ -7,8 +7,10 @@ cd far2l
 git clone https://github.com/elfmz/far2l
 cd far2l
 git clone https://github.com/cycleg/far-gvfs.git
+git clone https://github.com/unxed/far2l-fuse.git
 cd ..
 echo "add_subdirectory (far-gvfs)" >> far2l/CMakeLists.txt
+echo "add_subdirectory (far2l-fuse)" >> far2l/CMakeLists.txt
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ../far2l
