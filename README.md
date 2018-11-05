@@ -2,7 +2,7 @@
 
 **Readme in english is below**
 
-.deb пакеты [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=ru) для Ubuntu/Mint).
+.deb пакеты [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=ru)) для Ubuntu/Mint.
 
 В пакет включены:
 - FTP/SFTP/WebDAV/SMB клиент на базе gio [far-gvfs](https://github.com/cycleg/far-gvfs).
@@ -16,7 +16,7 @@ putty не передает часть горячих клавиш, в терм�
 
 ---
 
-.deb packages of [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port for Ubuntu/Mint).
+.deb packages of [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port) for Ubuntu/Mint.
 
 Package includes:
 - [far-gvfs](https://github.com/cycleg/far-gvfs) gio-based FTP/SFTP/WebDAV/SMB client
