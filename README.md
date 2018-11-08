@@ -16,9 +16,9 @@ putty не передает часть горячих клавиш, в терм�
 
 Установка:
 ```
-sudo dpkg -i ИМЯ_ПАКЕТА.deb
+sudo dpkg -i ПАКЕТ_ДЛЯ_ВАШЕГО_ДИСТРИБУТИВА.deb
 sudo apt-get install -f
-sudo dpkg -i ИМЯ_ПАКЕТА.deb
+sudo dpkg -i ПАКЕТ_ДЛЯ_ВАШЕГО_ДИСТРИБУТИВА.deb
 ```
 
 ---
@@ -37,8 +37,8 @@ putty fails to process some hotkeys, wal commander terminal works better. You ma
 
 Installation:
 ```
-sudo dpkg -i PACKAGE_NAME.deb
+sudo dpkg -i PACKAGE_FOR_YOUR_DISTRO.deb
 sudo apt-get install -f
-sudo dpkg -i PACKAGE_NAME.deb
+sudo dpkg -i PACKAGE_FOR_YOUR_DISTRO.deb
 ```
 
