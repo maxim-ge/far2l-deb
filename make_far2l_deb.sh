@@ -6,6 +6,7 @@ mkdir far2l
 cd far2l
 git clone https://github.com/elfmz/far2l
 cd far2l
+git checkout backend-separation
 git clone https://github.com/cycleg/far-gvfs.git
 git clone https://github.com/unxed/far2l-fuse.git
 cd ..
@@ -48,14 +49,23 @@ mkdir deb/far2l/usr/share
 mkdir deb/far2l/usr/share/applications
 echo "[Desktop Entry]" > deb/far2l/usr/share/applications/far2l.desktop
 echo "Type=Application" >> deb/far2l/usr/share/applications/far2l.desktop
-echo "Name=far2l" >> deb/far2l/usr/share/applications/far2l.desktop
-echo "GenericName=far2l" >> deb/far2l/usr/share/applications/far2l.desktop
+echo "Name=far2l wx" >> deb/far2l/usr/share/applications/far2l.desktop
+echo "GenericName=far2l wx" >> deb/far2l/usr/share/applications/far2l.desktop
 echo "Comment=File and archieve manager" >> deb/far2l/usr/share/applications/far2l.desktop
 echo "Exec=far2l" >> deb/far2l/usr/share/applications/far2l.desktop
 echo "Terminal=false" >> deb/far2l/usr/share/applications/far2l.desktop
 echo "Categories=Utility;FileManager;" >> deb/far2l/usr/share/applications/far2l.desktop
 echo "Icon=far2l.svg" >> deb/far2l/usr/share/applications/far2l.desktop
 echo "StartupNotify=true" >> deb/far2l/usr/share/applications/far2l.desktop
+#echo "[Desktop Entry]" > deb/far2l/usr/share/applications/far2lс.desktop
+#echo "Type=Application" >> deb/far2l/usr/share/applications/far2lс.desktop
+#echo "Name=far2l tty" >> deb/far2l/usr/share/applications/far2lс.desktop
+#echo "GenericName=far2l tty" >> deb/far2l/usr/share/applications/far2lс.desktop
+#echo "Comment=File and archieve manager" >> deb/far2l/usr/share/applications/far2lс.desktop
+#echo "Exec=far2l --tty" >> deb/far2l/usr/share/applications/far2lс.desktop
+#echo "Terminal=true" >> deb/far2l/usr/share/applications/far2lс.desktop
+#echo "Categories=Utility;FileManager;" >> deb/far2l/usr/share/applications/far2lс.desktop
+#echo "Icon=far2l.svg" >> deb/far2l/usr/share/applications/far2lс.desktop
 mkdir deb/far2l/usr/share
 mkdir deb/far2l/usr/share/icons
 mkdir deb/far2l/usr/share/icons/hicolor
@@ -65,8 +75,16 @@ cp far2l/far2l/DE/icons/far2l.svg deb/far2l/usr/share/icons/hicolor/scalable/app
 mkdir deb/far2l/usr/lib
 mkdir deb/far2l/usr/lib/far2l
 cp -R build/install/* deb/far2l/usr/lib/far2l/
+wget -P deb/far2l/usr/lib/far2l https://github.com/unxed/far2l-deb/raw/master/quirks_common.zip
+wget -P deb/far2l/usr/lib/far2l/Plugins/colorer/base/hrd/console https://github.com/unxed/far2l-deb/raw/master/eight.hrd
+echo $'    <hrd class="console" name="eight" description="Eight">' >> deb/far2l/usr/lib/far2l/Plugins/colorer/base/hrd/catalog-console.xml
+echo $'      <location link="&hrd;/console/eight.hrd"/>' >> deb/far2l/usr/lib/far2l/Plugins/colorer/base/hrd/catalog-console.xml
+echo $'    </hrd>' >> deb/far2l/usr/lib/far2l/Plugins/colorer/base/hrd/catalog-console.xml
 cd deb/far2l/usr/bin/
 ln -s ../lib/far2l/far2l far2l
+wget https://raw.githubusercontent.com/unxed/far2l-deb/master/far2lc.sh
+mv far2lc.sh far2lc
+chmod +x far2lc
 cd ../../..
 fakeroot dpkg-deb --build far2l
 cp far2l.deb ../..
