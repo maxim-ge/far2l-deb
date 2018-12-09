@@ -12,7 +12,7 @@
 
 По умолчанию far2l работает как GUI-приложение на wxWidgets. Также поддерживается экспериментальная работа в консоли, запускается по `far2lc`. Запускать в консоли просто как `far2l` или `far2l --tty` не следует, могут быть проблемы с монтированием gvfs.
 
-Консольная версия лучше всего работает во встроенном терминале wx-версии. Но и в xterm и его производных тоже можно пользоваться, хотя работают не все горячие клавиши. А вот через putty не передаются почти никакие горячие клавиши, в терминале wal commander с этим лучше. Есть ещё вот такой форк putty, там теоретически должно работать больше клавиш (не проверялось): https://github.com/adizero/putty-X (у кого получится собрать, поделитесь, пожалуйста, бинарниками).
+Консольная версия лучше всего работает во встроенном терминале wx-версии. Но и в xterm и его производных тоже можно пользоваться, хотя работают не все горячие клавиши. А вот через putty не передаются почти никакие горячие клавиши, [в терминале wal commander](http://www.wal-commander.org/home/download) с этим лучше. Есть ещё вот такой форк putty, там теоретически должно работать больше клавиш (не проверялось): https://github.com/adizero/putty-X (у кого получится собрать, поделитесь, пожалуйста, бинарниками).
 
 Установка:
 ```
@@ -33,7 +33,7 @@ If there is no package for your OS release or architecture, you may try to build
 
 far2l defaults to run as GUI app based on wxWidgets toolkit. You can run `far2lс` to get very experimental console support; do not run `far2l` or `far2l --tty` in console directly to avoid gvfs mount problems.
 
-Console-based version works best inside internal terminal of wx-based version, but is still usable under xterm and its derivatives. Unfortunately, putty fails to process most of the hot keys, wal commander's terminal does this job better. There is also a fork of putty with some hot key processing fixes (not tested): https://github.com/adizero/putty-X (please share your binaries if you manage to build it).
+Console-based version works best inside internal terminal of wx-based version, but is still usable under xterm and its derivatives. Unfortunately, putty fails to process most of the hot keys, [wal commander's terminal](http://www.wal-commander.org/home/download) does this job better. There is also a fork of putty with some hot key processing fixes (not tested): https://github.com/adizero/putty-X (please share your binaries if you manage to build it).
 
 Installation:
 ```
