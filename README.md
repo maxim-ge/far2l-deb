@@ -1,6 +1,7 @@
 # far2l-deb
 
 **Readme in english is below**
+**Consider using https://launchpad.net/~far2l-team/+archive/ubuntu/ppa instead**
 
 .deb пакеты [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=ru)) для Ubuntu/Mint.
 
