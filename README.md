@@ -1,10 +1,5 @@
 # far2l-deb
-
 **Readme in english is below**
-
-**Consider using https://launchpad.net/~far2l-team/+archive/ubuntu/ppa instead**
-
----
 
 .deb пакеты [far2l](https://github.com/elfmz/far2l) (linux порт [Far Manager 2](http://www.farmanager.com/index.php?l=ru)) для Ubuntu/Mint.
 
@@ -24,6 +19,8 @@ sudo dpkg -i ПАКЕТ_ДЛЯ_ВАШЕГО_ДИСТРИБУТИВА.deb
 sudo apt-get install -f
 sudo dpkg -i ПАКЕТ_ДЛЯ_ВАШЕГО_ДИСТРИБУТИВА.deb
 ```
+
+В ppa могут быть более свежие сборки, равно как и сборки для других выпусков дистрибутивов: https://launchpad.net/~far2l-team/+archive/ubuntu/ppa
 
 ---
 
@@ -46,3 +43,4 @@ sudo apt-get install -f
 sudo dpkg -i PACKAGE_FOR_YOUR_DISTRO.deb
 ```
 
+https://launchpad.net/~far2l-team/+archive/ubuntu/ppa may have more recent build as well as builds for unsupported here distros.
