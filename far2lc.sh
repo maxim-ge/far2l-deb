@@ -1,13 +1,5 @@
 #!/bin/bash
 
-if [[ $EUID -ne 0 ]]; then
-    cd ~
-    unzip -o /usr/lib/far2l/quirks_common.zip
-else
-    cd /root
-    unzip -o /usr/lib/far2l/quirks_common.zip
-fi
-
 # Search processes for the session variable 
 PID=$(pgrep -nU $USER gvfsd)
 if [[ "${PID}" == "" ]]; then
