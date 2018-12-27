@@ -74,7 +74,6 @@ cp far2l/far2l/DE/icons/far2l.svg deb/far2l/usr/share/icons/hicolor/scalable/app
 mkdir deb/far2l/usr/lib
 mkdir deb/far2l/usr/lib/far2l
 cp -R build/install/* deb/far2l/usr/lib/far2l/
-wget -P deb/far2l/usr/lib/far2l https://github.com/unxed/far2l-deb/raw/master/quirks_common.zip
 cd deb/far2l/usr/bin/
 ln -s ../lib/far2l/far2l far2l
 wget https://raw.githubusercontent.com/unxed/far2l-deb/master/far2lc.sh
