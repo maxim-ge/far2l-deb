@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install git gawk m4 libglib2.0-dev libwxgtk3.0-dev cmake g++ libgtkmm-3.0-dev uuid-dev libssl-dev sshfs gvfs-libs gvfs-backends gvfs-fuse libsecret-1-dev
+sudo apt-get install git gawk m4 libglib2.0-dev libwxgtk3.0-dev cmake g++ libgtkmm-3.0-dev uuid-dev libssl-dev sshfs gvfs-libs gvfs-backends gvfs-fuse libsecret-1-dev libssh-dev
 rm -rf far2l.deb far2l_`getconf LONG_BIT`.deb
 rm -rf far2l
 mkdir far2l
