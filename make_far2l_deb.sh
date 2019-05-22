@@ -8,6 +8,7 @@ git clone https://github.com/elfmz/far2l
 cd far2l
 git clone https://github.com/cycleg/far-gvfs.git
 git clone https://github.com/unxed/far2l-fuse.git
+sed -i 's/\.smarty/\.tpl/g' colorer/configs/base/hrc/proto.hrc
 cd ..
 echo "add_subdirectory (far-gvfs)" >> far2l/CMakeLists.txt
 echo "add_subdirectory (far2l-fuse)" >> far2l/CMakeLists.txt
