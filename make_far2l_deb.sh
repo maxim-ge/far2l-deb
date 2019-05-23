@@ -30,7 +30,7 @@ else
 fi
 echo "Maintainer: root <root@localhost>" >> deb/far2l/DEBIAN/control
 echo "Priority: extra" >> deb/far2l/DEBIAN/control
-echo "Depends: libglib2.0-dev, libwxgtk3.0-dev, libgtkmm-3.0-dev, uuid-dev, libssl-dev, libsecret-1-dev, sshfs, gvfs-libs, gvfs-backends, gvfs-fuse" >> deb/far2l/DEBIAN/control
+echo "Depends: libglib2.0-dev, libwxgtk3.0-dev, libgtkmm-3.0-dev, uuid-dev, libssl-dev, libsecret-1-dev, sshfs, gvfs-libs, gvfs-backends, gvfs-fuse, libssh-dev" >> deb/far2l/DEBIAN/control
 echo "Description: Linux port of FAR v2" >> deb/far2l/DEBIAN/control
 echo " https://github.com/elfmz/far2l" >> deb/far2l/DEBIAN/control
 echo " ." >> deb/far2l/DEBIAN/control
