@@ -52,6 +52,9 @@
     	<scheme name="smartyEscape8">
 			<regexp match="/^\}/" region="def:Text"/>
 		</scheme>
+    	<scheme name="smartyEscape9">
+			<regexp match="/\s@/" region="def:Text"/>
+		</scheme>
 		<scheme name="smartyCommentInner">
 			<block start="/\{\*/" end="/\*\}/"
 				content-priority="low"
@@ -309,6 +312,7 @@
     		<inherit scheme="smartyEscape6" />
     		<inherit scheme="smartyEscape7" />
     		<inherit scheme="smartyEscape8" />
+    		<inherit scheme="smartyEscape9" />
 			<inherit scheme="smartyComment" />
 			<inherit scheme="smartyPhpInsertion"/>
 
