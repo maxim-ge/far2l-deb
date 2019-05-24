@@ -55,6 +55,9 @@
     	<scheme name="smartyEscape9">
 			<regexp match="/\s@/" region="def:Text"/>
 		</scheme>
+    	<scheme name="smartyEscapeA">
+			<regexp match="/\{\x20?\}/" region="def:Text"/>
+		</scheme>
 		<scheme name="smartyCommentInner">
 			<block start="/\{\*/" end="/\*\}/"
 				content-priority="low"
@@ -304,6 +307,7 @@
 		</scheme>
 
 		<scheme name="Insertion">
+    		<inherit scheme="smartyEscapeA" />
 			<inherit scheme="smartyEscape1" />
     		<inherit scheme="smartyEscape2" />
     		<inherit scheme="smartyEscape3" />
