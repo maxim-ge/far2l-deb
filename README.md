@@ -6,7 +6,7 @@
 В пакет включены:
 - FTP/SFTP/WebDAV/SMB клиент на базе gio [far-gvfs](https://github.com/cycleg/far-gvfs).
 - SFTP клиент на базе sshfs [far2l-fuse](https://github.com/unxed/far2l-fuse) (pre-alpha! работает быстрее gvfs, но кэширование подходит не всем)
-- SFTP/SMB/NFS клиент NetRocks на базе libssh/libsmbclient/libnfs
+- SFTP/SMB/NFS/WebDAV клиент NetRocks на базе libssh/libsmbclient/libnfs/libneon ([Важное про WebDAV] (https://github.com/unxed/far2l-deb/issues/10))
 
 Если нет пакета для нужного дистрибутива или архитектуры, вы можете попробовать собрать пакет самостоятельно, используя скрипт `make_far2l_deb.sh`.
 
@@ -32,7 +32,7 @@ https://launchpad.net/~far2l-team/+archive/ubuntu/ppa
 Package includes:
 - [far-gvfs](https://github.com/cycleg/far-gvfs) gio-based FTP/SFTP/WebDAV/SMB client
 - [far2l-fuse](https://github.com/unxed/far2l-fuse) sshfs-based SFTP client (pre-alpha! faster than gvfs, but not everyone is happy with caching)
-- libssh/libsmbclient/libnfs-based Netrocks SFTP/SMB/NFS client
+- libssh/libsmbclient/libnfs/libneon-based Netrocks SFTP/SMB/NFS client ([WebDAV issue](https://github.com/unxed/far2l-deb/issues/10))
 
 If there is no package for your OS release or architecture, you may try to build package yourself using `make_far2l_deb.sh`.
 
