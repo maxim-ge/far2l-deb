@@ -25,10 +25,15 @@ echo "Package: far2l" > deb/far2l/DEBIAN/control
 echo "Version: 2.2" >> deb/far2l/DEBIAN/control
 MACHINE_TYPE=`uname -m`
 if [ ${MACHINE_TYPE} == 'x86_64' ]; then
-    echo "Architecture: amd64" >> deb/far2l/DEBIAN/control
+    DEB_ARCH="amd64"
+elif [ ${MACHINE_TYPE} == 'aarch64' ]; then
+    DEB_ARCH="arm64"
+elif [ ${MACHINE_TYPE} == 'armv7l' ]; then
+    DEB_ARCH="armhf"
 else
-    echo "Architecture: i386" >> deb/far2l/DEBIAN/control
+    DEB_ARCH="i386"
 fi
+echo "Architecture: $DEB_ARCH" >> deb/far2l/DEBIAN/control
 echo "Maintainer: root <root@localhost>" >> deb/far2l/DEBIAN/control
 echo "Priority: extra" >> deb/far2l/DEBIAN/control
 echo "Depends: libglib2.0-dev, libwxgtk3.0-dev, libgtkmm-3.0-dev, uuid-dev, libssl-dev, libsecret-1-dev, sshfs, gvfs-libs, gvfs-backends, gvfs-fuse, libssh-dev, libsmbclient-dev, libnfs-dev" >> deb/far2l/DEBIAN/control
@@ -86,4 +91,4 @@ fakeroot dpkg-deb --build far2l
 cp far2l.deb ../..
 cd ../..
 rm -rf far2l
-mv far2l.deb far2l_`getconf LONG_BIT`.deb
+mv far2l.deb far2l_${DEB_ARCH}.deb
