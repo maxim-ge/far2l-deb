@@ -1,9 +1,10 @@
 --- KeyFileHelper.cpp
-+++ KeyFileHelper.cpp
-@@ -8,6 +8,28 @@
++++ KeyFileHelper.new
+@@ -8,6 +8,30 @@
  #include <mutex>
  #include <stdlib.h>
  
++#if !defined(GLIB_VERSION_2_40)
 +gboolean
 +g_key_file_save_to_file (GKeyFile     *key_file,
 +                         const gchar  *filename,
@@ -25,6 +26,7 @@
 +
 +  return success;
 +}
++#endif
 +
  static std::mutex g_key_file_helper_mutex;
  
