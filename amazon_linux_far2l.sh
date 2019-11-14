@@ -10,6 +10,8 @@ sudo yum install gcc gcc-c++ autoconf automake git libmount-devel glib2-devel op
 
 # installing fresh cmake
 
+sudo yum remove cmake
+
 wget https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz
 tar -xvzf cmake-3.15.5.tar.gz
 cd cmake-3.15.5
