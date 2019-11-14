@@ -1,6 +1,9 @@
 
 # install far2l on Amazon Linux 2018.03
 
+mkdir far2l_temp
+cd far2l_temp
+
 # installing basic tools and libmount-devel needed for glib to build
 
 sudo yum install gcc gcc-c++ autoconf automake git libmount-devel glib2-devel openssl-devel patch
@@ -45,3 +48,5 @@ cd build
 cmake -DUSEWX=no -DCMAKE_BUILD_TYPE=Debug ../far2l
 make
 sudo make install
+
+cd ../../..
