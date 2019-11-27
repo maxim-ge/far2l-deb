@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo apt-get install git gawk m4 libglib2.0-dev libwxgtk3.0-dev cmake g++ libgtkmm-3.0-dev uuid-dev libssl-dev sshfs gvfs-libs gvfs-backends gvfs-fuse libsecret-1-dev libssh-dev libsmbclient-dev libnfs-dev fakeroot
-rm -rf far2l.deb far2l_`getconf LONG_BIT`.deb
+rm -rf far2l.deb
 rm -rf far2l
 mkdir far2l
 cd far2l
@@ -91,4 +91,5 @@ fakeroot dpkg-deb --build far2l
 cp far2l.deb ../..
 cd ../..
 rm -rf far2l
+rm -rf far2l_${DEB_ARCH}.deb
 mv far2l.deb far2l_${DEB_ARCH}.deb
