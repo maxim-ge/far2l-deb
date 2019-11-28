@@ -1,4 +1,4 @@
-Quick way to get far2l running on windows (to use remote far2l with all features like clipboard sync
+Quick way to get far2l running on windows (for example, to use remote far2l via netrocks with all features like clipboard sync
 and full keyboard support; 64 bits only for now):
 
 1. Setup cygwin as follows:
