@@ -1,0 +1,10 @@
+Quick way to get far2l running on windows (to use remote far2l with all features like clipboard sync
+and full keyboard support; 64 bits only for now):
+
+1. Setup cygwin as follows:
+setup-x86_64.exe -P libglib2.0_0,libneon27,libnfs8,libssh-common,libwx_baseu3.0_0,libwx_gtk3u3.0_0,xinit,xlaunch,xorg-server,libssh4,wget
+2. Open cygwin shell
+3. Install far2l:
+wget -O - https://raw.githubusercontent.com/unxed/far2l-deb/master/get_cyg_far2l_64.sh | bash
+4. Run far2l just as "far2l"
+
