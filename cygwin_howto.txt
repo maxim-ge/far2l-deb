@@ -8,3 +8,7 @@ setup-x86_64.exe -P libglib2.0_0,libneon27,libnfs8,libssh-common,libwx_baseu3.0_
 wget -O - https://raw.githubusercontent.com/unxed/far2l-deb/master/get_cyg_far2l_64.sh | bash
 4. Run far2l just as "far2l"
 
+If you have problems with keyboard layout switching, add something like
+XKBLAYOUT us,ru
+XkbOptions grp:alt_shift_toggle
+to .XWinrc file in your cygwin home folder (you may need to create that file if not exists).
