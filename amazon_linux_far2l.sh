@@ -39,12 +39,6 @@ mkdir far2l
 cd far2l
 git clone https://github.com/elfmz/far2l
 
-# applying old glib workaround
-cd far2l
-wget https://raw.githubusercontent.com/unxed/far2l-deb/master/kfh_fix.patch
-patch utils/src/KeyFileHelper.cpp kfh_fix.patch
-cd ..
-
 mkdir build
 cd build
 cmake -DUSEWX=no -DCMAKE_BUILD_TYPE=Debug ../far2l
