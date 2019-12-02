@@ -4,9 +4,9 @@
 mkdir far2l_temp
 cd far2l_temp
 
-# installing basic tools and libmount-devel needed for glib to build
+# installing basic tools
 
-sudo yum install gcc gcc-c++ autoconf automake git libmount-devel glib2-devel openssl-devel patch
+sudo yum install gcc gcc-c++ autoconf automake git glib2-devel openssl-devel
 
 # installing fresh cmake
 
