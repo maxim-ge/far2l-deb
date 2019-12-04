@@ -38,7 +38,7 @@ If there is no package for your OS release or architecture, you may try to build
 
 far2l defaults to run as GUI app based on wxWidgets toolkit. You can run `far2lс` to get console support; do not run `far2l` or `far2l --tty` in console directly to avoid gvfs mount problems.
 
-Console-based version works best inside internal terminal of wx-based version, but is still usable under xterm and its derivatives (but no clipboard sync and some hotkeys fail in this case). Usable under putty, but [some limitations](https://github.com/elfmz/far2l/issues/472) apply also (or you can use [special putty version](https://github.com/unxed/putty4far2l).
+Console-based version works best inside internal terminal of wx-based version, but is still usable under xterm and its derivatives (but no clipboard sync and some hotkeys fail in this case). Usable under putty, but [some limitations](https://github.com/elfmz/far2l/issues/472) apply also (or you can use [special putty version](https://github.com/unxed/putty4far2l)).
 
 Installation:
 ```
