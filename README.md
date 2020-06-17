@@ -25,6 +25,9 @@ sudo dpkg -i ПАКЕТ_ДЛЯ_ВАШЕГО_ДИСТРИБУТИВА.deb
 
 https://launchpad.net/~far2l-team/+archive/ubuntu/ppa
 
+P.S. far2l_ru_alt_fixed_2.2~ubuntu18.04_amd64.deb - версия с патчем, который исправляет работу клавиши Alt в сочетании с русскими буквами
+https://github.com/elfmz/far2l/issues/642
+
 ---
 
 .deb packages of [far2l](https://github.com/elfmz/far2l) ([Far Manager 2](http://www.farmanager.com/index.php?l=en) linux port) for Ubuntu/Mint.
@@ -50,3 +53,6 @@ sudo dpkg -i PACKAGE_FOR_YOUR_DISTRO.deb
 https://launchpad.net/~far2l-team/+archive/ubuntu/ppa may have more recent builds
 
 as well as builds for unsupported here distros.
+
+P.S. far2l_ru_alt_fixed_2.2~ubuntu18.04_amd64.deb - version with a patch that fixes Alt key combinations with Russian letters
+https://github.com/elfmz/far2l/issues/642
