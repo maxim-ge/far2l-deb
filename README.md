@@ -25,8 +25,9 @@ sudo dpkg -i ПАКЕТ_ДЛЯ_ВАШЕГО_ДИСТРИБУТИВА.deb
 
 https://launchpad.net/~far2l-team/+archive/ubuntu/ppa
 
-P.S. far2l_ru_alt_fixed_2.2~ubuntu18.04_amd64.deb - версия с патчем, который исправляет работу клавиши Alt в сочетании с русскими буквами
-https://github.com/elfmz/far2l/issues/642
+P.S. far2l_2.2~ubuntu20.04_amd64_wx31.deb — специальная версия, собранная на Ubuntu 20.04 с wx 3.1 отсюда:
+https://wiki.codelite.org/pmwiki.php/Main/WxWidgets31Binaries
+В ней нормально работает быстрый поиск по клавише Alt с не латинскими символами.
 
 ---
 
@@ -54,5 +55,6 @@ https://launchpad.net/~far2l-team/+archive/ubuntu/ppa may have more recent build
 
 as well as builds for unsupported here distros.
 
-P.S. far2l_ru_alt_fixed_2.2~ubuntu18.04_amd64.deb - version with a patch that fixes Alt key combinations with Russian letters
-https://github.com/elfmz/far2l/issues/642
+P.S. far2l_2.2~ubuntu20.04_amd64_wx31.deb is a special version built on Ubuntu 20.04 with wx 3.1 from here:
+https://wiki.codelite.org/pmwiki.php/Main/WxWidgets31Binaries
+A quick search using the Alt key with non-Latin characters works fine in it.
