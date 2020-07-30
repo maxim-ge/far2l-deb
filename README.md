@@ -57,4 +57,4 @@ as well as builds for unsupported here distros.
 
 P.S. far2l_2.2~ubuntu20.04_amd64_wx31.deb is a special version built on Ubuntu 20.04 with wx 3.1 from here:
 https://wiki.codelite.org/pmwiki.php/Main/WxWidgets31Binaries
-A quick search using the Alt key with non-Latin characters works fine in it.
+Quick search using the Alt key with non-Latin characters works fine in it.
